@@ -215,7 +215,7 @@ namespace Pixygon.NFT {
         /// <param name="failed">Action if failed</param>
         /// <returns></returns>
         public static async Task<bool> ValidateTemplate(NFTTemplateInfo info, OnSuccess success = null, OnFail failed = null) {
-            bool owned = false;
+            var owned = false;
             switch(info.chain) {
                 case Chain.Wax:
                 owned = await WaxNFT.ValidateTemplate(info);
@@ -250,6 +250,16 @@ namespace Pixygon.NFT {
                 break;
                 case Chain.Nem:
                 break;
+                case Chain.Solana:
+                    break;
+                case Chain.Hive:
+                    break;
+                case Chain.Phantom:
+                    break;
+                case Chain.Flow:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
             if(owned)
                 success?.Invoke();

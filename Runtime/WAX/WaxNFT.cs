@@ -147,8 +147,11 @@ namespace Pixygon.NFT.Wax {
         /// <param name="info">The required template</param>
         /// <returns></returns>
         public static async Task<bool> ValidateTemplate(NFTTemplateInfo info) {
-            if (info.template == -1)
+            if (info.template == -1) return false;
+            if (Account == string.Empty) {
+                Debug.Log("No account to fetch NFT from!");
                 return false;
+            }
             UnityWebRequest www = null;
             www = await GetRequest($"assets?owner={Account}&template_id={info.template}");
             var wax = GetList(JsonUtility.FromJson<response>(www.downloadHandler.text));
