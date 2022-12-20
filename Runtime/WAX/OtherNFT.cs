@@ -57,7 +57,7 @@ namespace Pixygon.NFT {
             while (retry < maxTries) {
                 WWWForm form = new WWWForm();
                 form.AddField("data", json);
-                UnityWebRequest www = UnityWebRequest.Post(string.Format("http://18.225.33.231/{0}", url), json);
+                UnityWebRequest www = UnityWebRequest.PostWwwForm(string.Format("http://18.225.33.231/{0}", url), json);
 
                 www.timeout = 60;
                 //www.method = "GET";
