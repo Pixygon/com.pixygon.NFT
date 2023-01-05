@@ -36,11 +36,11 @@ namespace Pixygon.NFT.Wax {
                         //"apiwax.3dkrender.com",         //Did not work!
                         //"query.3dkrender.com",          //Did not work!
                         "aa-wax-public1.neftyblocks.com",
-                        "aa-wax-public2.neftyblocks.com",
+                        //"aa-wax-public2.neftyblocks.com",       //Did not work!
                         //"api.wax.greeneosio.com",       //Did not work!
-                        "api.waxsweden.org",
-                        "wax.api.eosnation.io",
-                        "wax.pink.gg",
+                        //"api.waxsweden.org",       //Did not work!
+                        //"wax.api.eosnation.io",       //Did not work!
+                        //"wax.pink.gg",       //Did not work!
                         "api.wax-aa.bountyblok.io",
                         "atomicassets.ledgerwise.io",
                         "wax-atomic-api.eosphere.io",
