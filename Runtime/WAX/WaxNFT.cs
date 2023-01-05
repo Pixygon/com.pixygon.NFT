@@ -46,7 +46,9 @@ namespace Pixygon.NFT.Wax {
                         "wax-atomic-api.eosphere.io",
                         "atomic.wax.eosrio.io",
                         "aa-api-wax.eosauthority.com",
-                        "atomic.sentnl.io"
+                        "atomic.sentnl.io",
+                        "atomic.wax.tgg.gg",
+                        "api-wax-aa.eosarabia.net"
                         
                     }
                 };
