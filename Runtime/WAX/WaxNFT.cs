@@ -27,23 +27,27 @@ namespace Pixygon.NFT.Wax {
                 //nodes = JsonUtility.FromJson<endpoints>(json);
                 _nodes = new endpoints {
                     nodeEndpoints = new[] {
-                        "wax.cryptolions.io",           //Did not work!
-                        "wax.eosdac.io",                //Did not work!
+                        "atomic-api.wax.cryptolions.io",
+                        "wax-aa.eosdac.io",
                         "wax.api.atomicassets.io",
-                        "wax.greymass.com",             //Did not work!
-                        "wax.eu.eosamsterdam.net",      //Did not work!
+                        //"wax.greymass.com",             //Did not work!
+                        "wax-aa.eu.eosamsterdam.net",
                         "wax.blokcrafters.io",
-                        "apiwax.3dkrender.com",         //Did not work!
-                        "query.3dkrender.com",          //Did not work!
-                        "wax-public1.neftyblocks.com",  //Did not work!
-                        "wax-public2.neftyblocks.com",  //Did not work!
-                        "api.wax.greeneosio.com",       //Did not work!
+                        //"apiwax.3dkrender.com",         //Did not work!
+                        //"query.3dkrender.com",          //Did not work!
+                        "aa-wax-public1.neftyblocks.com",
+                        "aa-wax-public2.neftyblocks.com",
+                        //"api.wax.greeneosio.com",       //Did not work!
                         "api.waxsweden.org",
                         "wax.api.eosnation.io",
                         "wax.pink.gg",
-                        "api.wax.bountyblok.io",
-                        "waxapi.ledgerwise.io",
-                        "wax.eosphere.io"
+                        "api.wax-aa.bountyblok.io",
+                        "atomicassets.ledgerwise.io",
+                        "wax-atomic-api.eosphere.io",
+                        "atomic.wax.eosrio.io",
+                        "aa-api-wax.eosauthority.com",
+                        "atomic.sentnl.io"
+                        
                     }
                 };
                 _lastNodeUpdate = Time.realtimeSinceStartup;
