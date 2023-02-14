@@ -17,7 +17,7 @@ namespace Pixygon.NFT.Wax {
         private static string Account {
             get {
                 if (account == string.Empty)
-                    account = SaveManager.SettingsSave._waxWallet; // PlayerPrefs.GetString("WaxWallet");
+                    account = SaveManager.SettingsSave._user.waxWallet;
                 return account;
             }
         }
