@@ -16,7 +16,7 @@ namespace Pixygon.NFT.Wax {
 
         private static string Account {
             get {
-                if (account == string.Empty)
+                if (string.IsNullOrWhiteSpace(account) && !string.IsNullOrWhiteSpace(SaveManager.SettingsSave._user.waxWallet))
                     account = SaveManager.SettingsSave._user.waxWallet;
                 return account;
             }
@@ -41,7 +41,7 @@ namespace Pixygon.NFT.Wax {
                         //"api.waxsweden.org",       //Did not work!
                         //"wax.api.eosnation.io",       //Did not work!
                         //"wax.pink.gg",       //Did not work!
-                        "api.wax-aa.bountyblok.io",
+                        //"api.wax-aa.bountyblok.io",
                         "atomicassets.ledgerwise.io",
                         "wax-atomic-api.eosphere.io",
                         "atomic.wax.eosrio.io",
@@ -160,7 +160,7 @@ namespace Pixygon.NFT.Wax {
         /// <returns></returns>
         public static async Task<bool> ValidateTemplate(NFTTemplateInfo info) {
             if (info.template == -1) return false;
-            if (Account == string.Empty) {
+            if (string.IsNullOrWhiteSpace(Account)) {
                 Debug.Log("No account to fetch NFT from!");
                 return false;
             }
