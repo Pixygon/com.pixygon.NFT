@@ -60,7 +60,7 @@ namespace Pixygon.NFT.Eth {
             var retry = 0;
             var maxTries = _nodes.nodeEndpoints.Length;
             while (retry < maxTries) {
-                var www = UnityWebRequest.Get($"https://api.rarible.org/v0.1/");
+                var www = UnityWebRequest.Get($"https://api.rarible.org/v0.1/{url}");
                 www.timeout = 60;
                 www.SendWebRequest();
                 while (!www.isDone)
