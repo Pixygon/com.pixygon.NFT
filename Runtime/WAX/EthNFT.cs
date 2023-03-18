@@ -63,7 +63,7 @@ namespace Pixygon.NFT.Eth {
                 await Task.Yield();
             if (www.error == null) 
                 return www;
-            Log.DebugMessage(DebugGroup.Nft, $"Something went wrong while fetching NFT-data from Rarible: {www.error}\nURL: {www.url}\nRetry: {retry}");
+            Log.DebugMessage(DebugGroup.Nft, $"Something went wrong while fetching NFT-data from Rarible: {www.error}\nURL: {www.url}");
             return null;
         }
         private static waxAsset[] GetList(response response) {
