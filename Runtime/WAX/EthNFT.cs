@@ -56,24 +56,14 @@ namespace Pixygon.NFT.Eth {
             }
         }
         private static async Task<UnityWebRequest> GetRequest(string url, int page = 1, int limit = 250) {
-            await CheckNodes();
-            var retry = 0;
-            var maxTries = _nodes.nodeEndpoints.Length;
-            while (retry < maxTries) {
-                var www = UnityWebRequest.Get($"https://api.rarible.org/v0.1/{url}");
-                www.timeout = 60;
-                www.SendWebRequest();
-                while (!www.isDone)
-                    await Task.Yield();
-                if (www.error == null)
-                    return www;
-
-
-                Log.DebugMessage(DebugGroup.Nft, $"Something went wrong while fetching NFT-data from Rarible: {www.error}\nURL: {www.url}\nRetry: {retry}");
-                retry += 1;
-            }
-
-            Log.DebugMessage(DebugGroup.Nft, $"Retried NFT Fetch {maxTries} times, and still couldn't get it :(");
+            var www = UnityWebRequest.Get($"https://api.rarible.org/v0.1/{url}");
+            www.timeout = 60;
+            www.SendWebRequest();
+            while (!www.isDone) 
+                await Task.Yield();
+            if (www.error == null) 
+                return www;
+            Log.DebugMessage(DebugGroup.Nft, $"Something went wrong while fetching NFT-data from Rarible: {www.error}\nURL: {www.url}\nRetry: {retry}");
             return null;
         }
         private static waxAsset[] GetList(response response) {
@@ -165,7 +155,11 @@ namespace Pixygon.NFT.Eth {
             }
             var www = await GetRequest($"ownerships/ETHEREUM:{info.collection}:{info.schema}:{Account}");
             Debug.Log("This is the ETH-response!! " + www.downloadHandler.text);
-            return false;
+            if(www == null)
+                return false;
+            else
+                return true;
+                
             var wax = GetList(JsonUtility.FromJson<response>(www.downloadHandler.text));
             www.Dispose();
             bool owned;
