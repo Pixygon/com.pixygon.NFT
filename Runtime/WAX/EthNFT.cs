@@ -154,7 +154,8 @@ namespace Pixygon.NFT.Eth {
                 return false;
             }
             var www = await GetRequest($"ownerships/ETHEREUM:{info.collection}:{info.schema}:{Account}");
-            Debug.Log("This is the ETH-response!! " + www.downloadHandler.text);
+            Debug.Log($"This was the URL: ownerships/ETHEREUM:{info.collection}:{info.schema}:{Account}" +
+                      "\nThis is the ETH-response!! " + www.downloadHandler.text);
             if(www == null)
                 return false;
             else
