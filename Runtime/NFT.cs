@@ -1,4 +1,6 @@
 using Pixygon.NFT.Wax;
+using Pixygon.NFT.Eth;
+using Pixygon.NFT.Tez;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -15,12 +17,14 @@ namespace Pixygon.NFT {
 
         private static string _account = string.Empty;
 
+        /*
         private static string Account { get {
                 if(_account == string.Empty)
                     _account = PlayerPrefs.GetString("WaxWallet");
                 return _account;
             }
         }
+        */
 
         public static async void FetchAllAssetsInWallet(Chain chain, OnFinish finish, string wallet) {
             switch(chain) {
@@ -30,8 +34,10 @@ namespace Pixygon.NFT {
                 case Chain.EOS:
                     break;
                 case Chain.Ethereum:
+                    finish?.Invoke(await EthNFT.FetchAllAssetsInWallet(wallet));
                     break;
                 case Chain.Tezos:
+                    finish?.Invoke(await TezNFT.FetchAllAssetsInWallet(wallet));
                     break;
                 case Chain.Polygon:
                     break;
@@ -75,8 +81,10 @@ namespace Pixygon.NFT {
                 case Chain.EOS:
                     break;
                 case Chain.Ethereum:
+                    finish?.Invoke(await EthNFT.FetchAllAssets(collectionFilter));
                     break;
                 case Chain.Tezos:
+                    finish?.Invoke(await TezNFT.FetchAllAssets(collectionFilter));
                     break;
                 case Chain.Polygon:
                     break;
@@ -128,10 +136,10 @@ namespace Pixygon.NFT {
                 finish?.Invoke(await OtherNFT.FetchAssets(info));
                 break;
                 case Chain.Ethereum:
-                finish?.Invoke(await OtherNFT.FetchAssets(info));
+                finish?.Invoke(await EthNFT.FetchAssets(info));
                 break;
                 case Chain.Tezos:
-                finish?.Invoke(await OtherNFT.FetchAssets(info));
+                finish?.Invoke(await TezNFT.FetchAssets(info));
                 break;
                 case Chain.Polygon:
                 finish?.Invoke(await OtherNFT.FetchAssets(info));
@@ -177,8 +185,10 @@ namespace Pixygon.NFT {
                 case Chain.EOS:
                 break;
                 case Chain.Ethereum:
+                    return await EthNFT.FetchAssets(info);
                 break;
                 case Chain.Tezos:
+                    return await TezNFT.FetchAssets(info);
                 break;
                 case Chain.Polygon:
                 break;
@@ -223,8 +233,10 @@ namespace Pixygon.NFT {
                 case Chain.EOS:
                 break;
                 case Chain.Ethereum:
+                    owned = await EthNFT.ValidateTemplate(info);
                 break;
                 case Chain.Tezos:
+                    owned = await TezNFT.ValidateTemplate(info);
                 break;
                 case Chain.Polygon:
                 break;
