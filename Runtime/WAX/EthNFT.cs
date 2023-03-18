@@ -60,8 +60,7 @@ namespace Pixygon.NFT.Eth {
             var retry = 0;
             var maxTries = _nodes.nodeEndpoints.Length;
             while (retry < maxTries) {
-                var endPoint = _nodes.GetEndpoint;
-                var www = UnityWebRequest.Get($"https://{endPoint}/atomicassets/v1/{url}&page={page}&limit={limit}");
+                var www = UnityWebRequest.Get($"https://api.rarible.org/v0.1/");
                 www.timeout = 60;
                 www.SendWebRequest();
                 while (!www.isDone)
@@ -70,7 +69,7 @@ namespace Pixygon.NFT.Eth {
                     return www;
 
 
-                Log.DebugMessage(DebugGroup.Nft, $"Something went wrong while fetching NFT-data on EndPoint {endPoint}: {www.error}\nURL: {www.url}\nRetry: {retry}");
+                Log.DebugMessage(DebugGroup.Nft, $"Something went wrong while fetching NFT-data from Rarible: {www.error}\nURL: {www.url}\nRetry: {retry}");
                 retry += 1;
             }
 
@@ -159,17 +158,12 @@ namespace Pixygon.NFT.Eth {
         /// <param name="info">The required template</param>
         /// <returns></returns>
         public static async Task<bool> ValidateTemplate(NFTTemplateInfo info) {
-            //FIX UP THIS ONE!!!
-            
-            
             if (info.template == -1) return false;
             if (string.IsNullOrWhiteSpace(Account)) {
                 Debug.Log("No account to fetch NFT from!");
                 return false;
             }
-            UnityWebRequest www = null;
-            
-            www = await GetRequest($"ownerships/ETHEREUM:{info.collection}:{info.schema}:{Account}");
+            var www = await GetRequest($"ownerships/ETHEREUM:{info.collection}:{info.schema}:{Account}");
             Debug.Log("This is the ETH-response!! " + www.downloadHandler.text);
             return false;
             var wax = GetList(JsonUtility.FromJson<response>(www.downloadHandler.text));
