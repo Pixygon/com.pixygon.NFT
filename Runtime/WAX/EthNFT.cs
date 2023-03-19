@@ -21,40 +21,6 @@ namespace Pixygon.NFT.Eth {
                 return account;
             }
         }
-        private static async Task CheckNodes() {
-            if (_nodes == null || (Time.realtimeSinceStartup - _lastNodeUpdate) > 600f) {
-                //string json = await PixygonAPI.GetEndpointNodesAsync();
-                //nodes = JsonUtility.FromJson<endpoints>(json);
-                _nodes = new endpoints {
-                    nodeEndpoints = new[] {
-                        "atomic-api.wax.cryptolions.io",
-                        "wax-aa.eosdac.io",
-                        "wax.api.atomicassets.io",
-                        //"wax.greymass.com",             //Did not work!
-                        "wax-aa.eu.eosamsterdam.net",
-                        "wax.blokcrafters.io",
-                        //"apiwax.3dkrender.com",         //Did not work!
-                        //"query.3dkrender.com",          //Did not work!
-                        "aa-wax-public1.neftyblocks.com",
-                        //"aa-wax-public2.neftyblocks.com",       //Did not work!
-                        //"api.wax.greeneosio.com",       //Did not work!
-                        //"api.waxsweden.org",       //Did not work!
-                        //"wax.api.eosnation.io",       //Did not work!
-                        //"wax.pink.gg",       //Did not work!
-                        //"api.wax-aa.bountyblok.io",
-                        "atomicassets.ledgerwise.io",
-                        "wax-atomic-api.eosphere.io",
-                        "atomic.wax.eosrio.io",
-                        "aa-api-wax.eosauthority.com",
-                        "atomic.sentnl.io",
-                        "atomic.wax.tgg.gg"
-                        //"api-wax-aa.eosarabia.net"
-                        
-                    }
-                };
-                _lastNodeUpdate = Time.realtimeSinceStartup;
-            }
-        }
         private static async Task<UnityWebRequest> GetRequest(string url, int page = 1, int limit = 250) {
             var www = UnityWebRequest.Get($"https://api.rarible.org/v0.1/{url}");
             www.timeout = 60;
@@ -154,12 +120,14 @@ namespace Pixygon.NFT.Eth {
                 return false;
             }
             var www = await GetRequest($"ownerships/ETHEREUM:{info.collection}:{info.schema}:{Account}");
-            Debug.Log($"This was the URL: ownerships/ETHEREUM:{info.collection}:{info.schema}:{Account}" +
-                      "\nThis is the ETH-response!! " + www.downloadHandler.text);
             if(www == null)
                 return false;
-            else
+            else {
+                Debug.Log($"This was the URL: ownerships/ETHEREUM:{info.collection}:{info.schema}:{Account}" +
+                          "\nThis is the ETH-response!! " + www.downloadHandler.text);
                 return true;
+            }
+            
                 
             var wax = GetList(JsonUtility.FromJson<response>(www.downloadHandler.text));
             www.Dispose();
