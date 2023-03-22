@@ -12,6 +12,7 @@ namespace Pixygon.NFT {
     public class NFT : MonoBehaviour {
         public delegate void OnFinish(waxAsset[] assets);
         public delegate void OnSuccess();
+        public delegate void OnSuccessString(string s);
         public delegate void OnFail();
         public delegate void OnBalanceGet(string s);
 
@@ -275,6 +276,64 @@ namespace Pixygon.NFT {
             }
             if(owned)
                 success?.Invoke();
+            else
+                failed?.Invoke();
+
+            return owned;
+
+        }
+
+        public static async Task<bool> ValidateTemplate(NFTTemplateInfo info, OnSuccessString success = null, OnFail failed = null) {
+            var owned = false;
+            switch(info.chain) {
+                case Chain.Wax:
+                    owned = await WaxNFT.ValidateTemplate(info);
+                    break;
+                case Chain.EOS:
+                    break;
+                case Chain.Ethereum:
+                    owned = await EthNFT.ValidateTemplate(info);
+                    break;
+                case Chain.Tezos:
+                    owned = await TezNFT.ValidateTemplate(info);
+                    break;
+                case Chain.Polygon:
+                    break;
+                case Chain.Polkadot:
+                    break;
+                case Chain.Elrond:
+                    break;
+                case Chain.BinanceChain:
+                    break;
+                case Chain.Cardano:
+                    break;
+                case Chain.Stellar:
+                    break;
+                case Chain.Neo:
+                    break;
+                case Chain.HyperledgerFabric:
+                    break;
+                case Chain.Waves:
+                    break;
+                case Chain.Cosmos:
+                    break;
+                case Chain.Ripple:
+                    break;
+                case Chain.Nem:
+                    break;
+                case Chain.Solana:
+                    break;
+                case Chain.Hive:
+                    break;
+                case Chain.Phantom:
+                    break;
+                case Chain.Flow:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+            if(owned)
+                success?.Invoke(info.collection + info.schema + info.template);
             else
                 failed?.Invoke();
 
