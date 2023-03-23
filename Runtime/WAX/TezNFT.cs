@@ -8,10 +8,6 @@ using UnityEngine.Networking;
 
 namespace Pixygon.NFT.Tez {
     public class TezNFT : MonoBehaviour {
-        //EndpointList: https://validate.eosnation.io/wax/reports/endpoints.html
-
-        private static float _lastNodeUpdate;
-        private static endpoints _nodes;
         private static string account = string.Empty;
 
         private static string Account {
@@ -21,61 +17,16 @@ namespace Pixygon.NFT.Tez {
                 return account;
             }
         }
-        private static async Task CheckNodes() {
-            if (_nodes == null || (Time.realtimeSinceStartup - _lastNodeUpdate) > 600f) {
-                //string json = await PixygonAPI.GetEndpointNodesAsync();
-                //nodes = JsonUtility.FromJson<endpoints>(json);
-                _nodes = new endpoints {
-                    nodeEndpoints = new[] {
-                        "atomic-api.wax.cryptolions.io",
-                        "wax-aa.eosdac.io",
-                        "wax.api.atomicassets.io",
-                        //"wax.greymass.com",             //Did not work!
-                        "wax-aa.eu.eosamsterdam.net",
-                        "wax.blokcrafters.io",
-                        //"apiwax.3dkrender.com",         //Did not work!
-                        //"query.3dkrender.com",          //Did not work!
-                        "aa-wax-public1.neftyblocks.com",
-                        //"aa-wax-public2.neftyblocks.com",       //Did not work!
-                        //"api.wax.greeneosio.com",       //Did not work!
-                        //"api.waxsweden.org",       //Did not work!
-                        //"wax.api.eosnation.io",       //Did not work!
-                        //"wax.pink.gg",       //Did not work!
-                        //"api.wax-aa.bountyblok.io",
-                        "atomicassets.ledgerwise.io",
-                        "wax-atomic-api.eosphere.io",
-                        "atomic.wax.eosrio.io",
-                        "aa-api-wax.eosauthority.com",
-                        "atomic.sentnl.io",
-                        "atomic.wax.tgg.gg"
-                        //"api-wax-aa.eosarabia.net"
-                        
-                    }
-                };
-                _lastNodeUpdate = Time.realtimeSinceStartup;
-            }
-        }
         private static async Task<UnityWebRequest> GetRequest(string url, int page = 1, int limit = 250) {
-            await CheckNodes();
-            var retry = 0;
-            var maxTries = _nodes.nodeEndpoints.Length;
-            while (retry < maxTries) {
-                var endPoint = _nodes.GetEndpoint;
-                var www = UnityWebRequest.Get($"https://{endPoint}/atomicassets/v1/{url}&page={page}&limit={limit}");
+            var www = UnityWebRequest.Get($"https://api.rarible.org/v0.1/{url}");
                 www.timeout = 60;
                 www.SendWebRequest();
                 while (!www.isDone)
                     await Task.Yield();
                 if (www.error == null)
                     return www;
-
-
-                Log.DebugMessage(DebugGroup.Nft, $"Something went wrong while fetching NFT-data on EndPoint {endPoint}: {www.error}\nURL: {www.url}\nRetry: {retry}");
-                retry += 1;
-            }
-
-            Log.DebugMessage(DebugGroup.Nft, $"Retried NFT Fetch {maxTries} times, and still couldn't get it :(");
-            return null;
+                Log.DebugMessage(DebugGroup.Nft, $"Something went wrong while fetching Tezos NFT-data from Rarible: {www.error}\nURL: {www.url}");
+                return null;
         }
         private static waxAsset[] GetList(response response) {
             var wax = new List<waxAsset>();
@@ -161,25 +112,17 @@ namespace Pixygon.NFT.Tez {
         public static async Task<bool> ValidateTemplate(NFTTemplateInfo info) {
             if (info.template == -1) return false;
             if (string.IsNullOrWhiteSpace(Account)) {
-                Debug.Log("No account to fetch NFT from!");
+                Debug.Log("No TEZ account to fetch NFT from!");
                 return false;
             }
-            UnityWebRequest www = null;
-            www = await GetRequest($"assets?owner={Account}&template_id={info.template}");
-            var wax = GetList(JsonUtility.FromJson<response>(www.downloadHandler.text));
-            www.Dispose();
-            bool owned;
-            if (wax == null)
-                owned = false;
-            else if (wax.Length == 0)
-                owned = false;
-            else if (wax[0].assets == null)
-                owned = false;
-            else if (wax[0].assets.Length == 0)
-                owned = false;
-            else
-                owned = true;
-            return owned;
+            var www = await GetRequest($"ownerships/TEZOS:{info.collection}:{info.schema}:{Account}");
+            if(www == null)
+                return false;
+            else {
+                Debug.Log($"This was the URL: ownerships/TEZOS:{info.collection}:{info.schema}:{Account}" +
+                          "\nThis is the TEZ-response!! " + www.downloadHandler.text);
+                return true;
+            }
         }
         public static async Task<waxAssetData> GetTemplate(int template) {
             var www = await GetRequest($"assets?template_id={template}&limit=100&order=desc&sort=asset_id");
@@ -236,21 +179,6 @@ namespace Pixygon.NFT.Tez {
             }
 
             return allAssets.ToArray();
-        }
-    }
-
-    [System.Serializable]
-    public class endpoints {
-        public string[] nodeEndpoints;
-        private int currentIndex = 0;
-
-        public string GetEndpoint {
-            get {
-                currentIndex++;
-                if (currentIndex >= nodeEndpoints.Length)
-                    currentIndex = 0;
-                return nodeEndpoints[currentIndex];
-            }
         }
     }
 }

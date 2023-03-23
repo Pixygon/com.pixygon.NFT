@@ -8,10 +8,6 @@ using UnityEngine.Networking;
 
 namespace Pixygon.NFT.Eth {
     public class EthNFT : MonoBehaviour {
-        //EndpointList: https://validate.eosnation.io/wax/reports/endpoints.html
-
-        private static float _lastNodeUpdate;
-        private static endpoints _nodes;
         private static string account = string.Empty;
 
         private static string Account {
@@ -29,7 +25,7 @@ namespace Pixygon.NFT.Eth {
                 await Task.Yield();
             if (www.error == null) 
                 return www;
-            Log.DebugMessage(DebugGroup.Nft, $"Something went wrong while fetching NFT-data from Rarible: {www.error}\nURL: {www.url}");
+            Log.DebugMessage(DebugGroup.Nft, $"Something went wrong while fetching Ethereum NFT-data from Rarible: {www.error}\nURL: {www.url}");
             return null;
         }
         private static waxAsset[] GetList(response response) {
@@ -116,7 +112,7 @@ namespace Pixygon.NFT.Eth {
         public static async Task<bool> ValidateTemplate(NFTTemplateInfo info) {
             if (info.template == -1) return false;
             if (string.IsNullOrWhiteSpace(Account)) {
-                Debug.Log("No account to fetch NFT from!");
+                Debug.Log("No ETH account to fetch NFT from!");
                 return false;
             }
             var www = await GetRequest($"ownerships/ETHEREUM:{info.collection}:{info.schema}:{Account}");
@@ -127,22 +123,6 @@ namespace Pixygon.NFT.Eth {
                           "\nThis is the ETH-response!! " + www.downloadHandler.text);
                 return true;
             }
-            
-                
-            var wax = GetList(JsonUtility.FromJson<response>(www.downloadHandler.text));
-            www.Dispose();
-            bool owned;
-            if (wax == null)
-                owned = false;
-            else if (wax.Length == 0)
-                owned = false;
-            else if (wax[0].assets == null)
-                owned = false;
-            else if (wax[0].assets.Length == 0)
-                owned = false;
-            else
-                owned = true;
-            return owned;
         }
         public static async Task<waxAssetData> GetTemplate(int template) {
             var www = await GetRequest($"assets?template_id={template}&limit=100&order=desc&sort=asset_id");
@@ -199,21 +179,6 @@ namespace Pixygon.NFT.Eth {
             }
 
             return allAssets.ToArray();
-        }
-    }
-
-    [System.Serializable]
-    public class endpoints {
-        public string[] nodeEndpoints;
-        private int currentIndex = 0;
-
-        public string GetEndpoint {
-            get {
-                currentIndex++;
-                if (currentIndex >= nodeEndpoints.Length)
-                    currentIndex = 0;
-                return nodeEndpoints[currentIndex];
-            }
         }
     }
 }
