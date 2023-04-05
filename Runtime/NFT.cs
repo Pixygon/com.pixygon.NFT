@@ -387,6 +387,7 @@ namespace Pixygon.NFT {
         public string collectionName;
         public string ipfs;
         public string description;
+        public string video;
         //public string chain;
         //public int templateID;
         //public string schemaID;
