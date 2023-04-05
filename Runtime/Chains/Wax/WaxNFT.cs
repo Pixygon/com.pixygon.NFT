@@ -64,21 +64,16 @@ namespace Pixygon.NFT.Wax {
                 var www = UnityWebRequest.Get($"https://{endPoint}/atomicassets/v1/{url}&page={page}&limit={limit}");
                 www.timeout = 60;
                 www.SendWebRequest();
-                while (!www.isDone)
-                    await Task.Yield();
-                if (www.error == null)
-                    return www;
-
-
+                while (!www.isDone) await Task.Yield();
+                if (www.error == null) return www;
                 Log.DebugMessage(DebugGroup.Nft, $"Something went wrong while fetching NFT-data on EndPoint {endPoint}: {www.error}\nURL: {www.url}\nRetry: {retry}");
                 retry += 1;
             }
-
             Log.DebugMessage(DebugGroup.Nft, $"Retried NFT Fetch {maxTries} times, and still couldn't get it :(");
             return null;
         }
-        private static NftAssetContainer[] GetList(response response) {
-            var wax = new List<NftAssetContainer>();
+        private static NftAssetObject[] GetList(response response) {
+            var wax = new List<NftAssetObject>();
             foreach (var data in response.data) {
                 var found = false;
                 foreach (var waxasset in wax) {
@@ -88,10 +83,8 @@ namespace Pixygon.NFT.Wax {
                     found = true;
                     waxasset.assets = listAssetData.ToArray();
                 }
-
-                if (found) continue;
-                {
-                    var waxasset = new NftAssetContainer(data);
+                if (found) continue; {
+                    var waxasset = new NftAssetObject(data);
                     var listAssetData2 = new List<AssetData> { //waxasset.assets = new List<AssetData>();
                         new AssetData(data.asset_id, data.owner, data.template_mint, data.template.issued_supply, data.template.max_supply) };
                     waxasset.assets = listAssetData2.ToArray();
@@ -105,7 +98,7 @@ namespace Pixygon.NFT.Wax {
         /// Invokes 'finish' method and returns templates found
         /// </summary>
         /// <param name="info"></param>
-        public static async Task<NftAssetContainer[]> FetchAssets(NFTTemplateInfo info) {
+        public static async Task<NftAssetObject[]> FetchAssets(NFTTemplateInfo info) {
             var url = "assets?owner=" + Account;
             if (info.collection != string.Empty)
                 url += "&collection_name=" + info.collection;
@@ -118,27 +111,21 @@ namespace Pixygon.NFT.Wax {
             www.Dispose();
             return a;
         }
-        public static async Task<NftAssetContainer[]> FetchAllAssets(string collectionFilter = "") {
-            var allAssets = new List<NftAssetContainer>();
+        public static async Task<NftAssetObject[]> FetchAllAssets(string collectionFilter = "") {
+            var allAssets = new List<NftAssetObject>();
             var page = 1;
             var isComplete = false;
             var url = "assets?owner=" + Account;
             if (!string.IsNullOrEmpty(collectionFilter))
                 url += "&collection_whitelist=" + collectionFilter;
-
-
             while (!isComplete) {
                 var www = await GetRequest(url, page);
-
                 page++;
-
                 var r = JsonUtility.FromJson<response>(www.downloadHandler.text);
-
                 if (r.success == false || r.data.Length == 0) {
                     isComplete = true;
                     break;
                 }
-
                 var a = GetList(JsonUtility.FromJson<response>(www.downloadHandler.text));
                 allAssets.AddRange(a);
                 www.Dispose();
@@ -174,11 +161,11 @@ namespace Pixygon.NFT.Wax {
                 owned = true;
             return owned;
         }
-        public static async Task<NftAssetContainer> GetTemplate(int template) {
+        public static async Task<NftAssetObject> GetTemplate(int template) {
             var www = await GetRequest($"assets?template_id={template}&limit=100&order=desc&sort=asset_id");
             var d = JsonUtility.FromJson<response>(www.downloadHandler.text).data[0];
             www.Dispose();
-            return new NftAssetContainer(d);
+            return new NftAssetObject(d);
         }
         public static async Task<string> GetBalance(string symbol = "WAX", string code = "eosio.token") {
             var data = new PostData {
@@ -206,28 +193,23 @@ namespace Pixygon.NFT.Wax {
             www.Dispose();
             return accountResult.rows.Length == 0 ? "0" : accountResult.rows[0].balance;
         }
-        public static async Task<NftAssetContainer[]> FetchAllAssetsInWallet(string wallet) {
-            var allAssets = new List<NftAssetContainer>();
+        public static async Task<NftAssetObject[]> FetchAllAssetsInWallet(string wallet) {
+            var allAssets = new List<NftAssetObject>();
             var page = 1;
             var isComplete = false;
             var url = "assets?owner=" + Account;
             while (!isComplete) {
                 var www = await GetRequest(url, page);
-
                 page++;
-
                 var r = JsonUtility.FromJson<response>(www.downloadHandler.text);
-
                 if (r.success == false || r.data.Length == 0) {
                     isComplete = true;
                     break;
                 }
-
                 var a = GetList(JsonUtility.FromJson<response>(www.downloadHandler.text));
                 allAssets.AddRange(a);
                 www.Dispose();
             }
-
             return allAssets.ToArray();
         }
     }

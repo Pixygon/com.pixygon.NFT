@@ -29,7 +29,7 @@ namespace Pixygon.NFT.Eth {
             return null;
         }
         //Must implement
-        private static NftAssetContainer[] GetList(response response) {
+        private static NftAssetObject[] GetList(response response) {
             /*
             var wax = new List<waxAsset>();
             foreach (var data in response.data) {
@@ -67,7 +67,7 @@ namespace Pixygon.NFT.Eth {
         /// Invokes 'finish' method and returns templates found
         /// </summary>
         /// <param name="info"></param>
-        public static async Task<NftAssetContainer[]> FetchAssets(NFTTemplateInfo info) {
+        public static async Task<NftAssetObject[]> FetchAssets(NFTTemplateInfo info) {
             var url = "assets?owner=" + Account;
             if (info.collection != string.Empty)
                 url += "&collection_name=" + info.collection;
@@ -80,7 +80,7 @@ namespace Pixygon.NFT.Eth {
             www.Dispose();
             return a;
         }
-        public static async Task<NftAssetContainer[]> FetchAllAssets(string collectionFilter = "") {
+        public static async Task<NftAssetObject[]> FetchAllAssets(string collectionFilter = "") {
             /*
             var allAssets = new List<waxAsset>();
             var page = 1;
@@ -132,7 +132,7 @@ namespace Pixygon.NFT.Eth {
                 return true;
             }
         }
-        public static async Task<NftAssetContainer> GetTemplate(int template) {
+        public static async Task<NftAssetObject> GetTemplate(int template) {
             /*
             var www = await GetRequest($"assets?template_id={template}&limit=100&order=desc&sort=asset_id");
             var d = JsonUtility.FromJson<response>(www.downloadHandler.text).data[0];
@@ -167,7 +167,7 @@ namespace Pixygon.NFT.Eth {
             www.Dispose();
             return accountResult.rows.Length == 0 ? "0" : accountResult.rows[0].balance;
         }
-        public static async Task<NftAssetContainer[]> FetchAllAssetsInWallet(string wallet) {
+        public static async Task<NftAssetObject[]> FetchAllAssetsInWallet(string wallet) {
             /*
             var allAssets = new List<waxAsset>();
             var page = 1;

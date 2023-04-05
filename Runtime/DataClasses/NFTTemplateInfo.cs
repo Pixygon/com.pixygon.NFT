@@ -21,7 +21,7 @@ namespace Pixygon.NFT {
         public async Task GetTemplate() {
             if(template == 0)
                 return;
-            NftAssetContainer t = await NFT.GetTemplate(template);
+            var t = await NFT.GetTemplate(template);
             if(t == null)
                 Debug.Log("Wrong template");
             else {

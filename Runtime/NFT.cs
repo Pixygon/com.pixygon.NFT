@@ -8,7 +8,7 @@ using UnityEngine.Networking;
 
 namespace Pixygon.NFT {
     public class NFT : MonoBehaviour {
-        public delegate void OnFinish(NftAssetContainer[] assets);
+        public delegate void OnFinish(NftAssetObject[] assets);
         public delegate void OnSuccess();
         public delegate void OnSuccessString(string s);
         public delegate void OnFail();
@@ -177,7 +177,7 @@ namespace Pixygon.NFT {
                     break;
             }
         }
-        public static async Task<NftAssetContainer[]> FetchAssets(NFTTemplateInfo info) {
+        public static async Task<NftAssetObject[]> FetchAssets(NFTTemplateInfo info) {
             switch(info.chain) {
                 case Chain.Wax:
                 return await WaxNFT.FetchAssets(info);
@@ -339,7 +339,7 @@ namespace Pixygon.NFT {
 
         }
 
-        public static async Task<NftAssetContainer> GetTemplate(int template) {
+        public static async Task<NftAssetObject> GetTemplate(int template) {
             return await WaxNFT.GetTemplate(template);
         }
         public static async void GetBalance(string symbol = "WAX", OnBalanceGet success = null, string code = "eosio.token") {
