@@ -96,6 +96,7 @@ namespace Pixygon.NFT.Wax {
                         templateInfo = new NFTTemplateInfo(data.template.template_id, data.schema.schema_name, data.collection.collection_name, Chain.Wax),
                         //waxasset.templateID = data.template.template_id;
                         ipfs = data.data.img,
+                        video = data.data.video,
                         description = data.data.Description,
                         collectionName = data.collection.collection_name
                     };

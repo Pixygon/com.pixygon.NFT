@@ -491,6 +491,7 @@ namespace Pixygon.NFT {
     [Serializable]
     public class nftdata {
         public string img;
+        public string video;
         public string Info;
         public string name;
         public string Description;
