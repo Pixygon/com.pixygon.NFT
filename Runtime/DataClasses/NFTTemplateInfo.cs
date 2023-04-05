@@ -21,12 +21,12 @@ namespace Pixygon.NFT {
         public async Task GetTemplate() {
             if(template == 0)
                 return;
-            waxAssetData t = await NFT.GetTemplate(template);
+            NftAssetContainer t = await NFT.GetTemplate(template);
             if(t == null)
                 Debug.Log("Wrong template");
             else {
-                collection = t.collection.collection_name;
-                schema = t.schema.schema_name;
+                collection = t.collectionName;
+                //schema = t.schema.schema_name;
             }
         }
     }

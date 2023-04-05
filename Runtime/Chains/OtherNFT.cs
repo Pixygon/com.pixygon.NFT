@@ -112,47 +112,39 @@ namespace Pixygon.NFT {
         /// </summary>
         /// <param name="info"></param>
         /// <param name="finish"></param>
-        public static async Task<waxAsset[]> FetchAssets(NFTTemplateInfo info) {
-            string url = "FetchAsset";
-            string json = JsonUtility.ToJson(new NFTRequest(info, GetWallet(info.chain)));
+        public static async Task<NftAssetContainer[]> FetchAssets(NFTTemplateInfo info) {
+            var url = "FetchAsset";
+            var json = JsonUtility.ToJson(new NFTRequest(info, GetWallet(info.chain)));
             Debug.Log(url + "\n" + json);
-            UnityWebRequest www = await GetRequest(url, json);
+            var www = await GetRequest(url, json);
             Debug.Log("PLEASE COPYPASTE THIS TO ME, MAGNTA:\n" + www.downloadHandler.text);
-            waxAsset[] a = JsonUtility.FromJson<FetchedAssets>(www.downloadHandler.text).assets;
-            Debug.Log(a.Length);
+            //var a = JsonUtility.FromJson<FetchedAssets>(www.downloadHandler.text).assets;
+            //Debug.Log(a.Length);
             www.Dispose();
-            return a;
+            //return a;
+            return null;
         }
-
-        public static async Task<waxAsset[]> FetchAllAssets(string collectionFilter = "") {
-            List<waxAsset> allAssets = new List<waxAsset>();
-            int page = 1;
-            bool isComplete = false;
-            string url = "assets?owner=";// + Account;
+        public static async Task<NftAssetContainer[]> FetchAllAssets(string collectionFilter = "") {
+            var allAssets = new List<NftAssetContainer>();
+            var page = 1;
+            var isComplete = false;
+            var url = "assets?owner=";// + Account;
             if (!string.IsNullOrEmpty(collectionFilter))
                 url += "&collection_whitelist=" + collectionFilter;
-
-
             while (!isComplete) {
-                UnityWebRequest www = await GetRequest(url, "");
-
+                var www = await GetRequest(url, "");
                 page++;
-
-                response r = JsonUtility.FromJson<response>(www.downloadHandler.text);
-
+                var r = JsonUtility.FromJson<response>(www.downloadHandler.text);
                 if (r.success == false || r.data.Length == 0) {
                     isComplete = true;
                     break;
                 }
-
-                waxAsset[] a = null; // GetList(JsonUtility.FromJson<response>(www.downloadHandler.text));
+                NftAssetContainer[] a = null; // GetList(JsonUtility.FromJson<response>(www.downloadHandler.text));
                 allAssets.AddRange(a);
                 www.Dispose();
             }
-
             return allAssets.ToArray();
         }
-
         /// <summary>
         /// Returns true if the account owns the template, and invokes success or failed actions, if supplied
         /// </summary>
@@ -163,10 +155,9 @@ namespace Pixygon.NFT {
         public static async Task<bool> ValidateTemplate(NFTTemplateInfo info) {
             if (info.template == -1)
                 return false;
-            UnityWebRequest www = null;
-            string json = JsonUtility.ToJson(new NFTRequest(info, GetWallet(info.chain)));
-            www = await GetRequest("ValidateTemplate", json);
-            waxAsset[] wax = null; //GetList(JsonUtility.FromJson<response>(www.downloadHandler.text));
+            var json = JsonUtility.ToJson(new NFTRequest(info, GetWallet(info.chain)));
+            var www = await GetRequest("ValidateTemplate", json);
+            NftAssetContainer[] wax = null; //GetList(JsonUtility.FromJson<response>(www.downloadHandler.text));
             www.Dispose();
             bool owned;
             if (wax == null)
@@ -181,24 +172,24 @@ namespace Pixygon.NFT {
                 owned = true;
             return owned;
         }
-
-        public static async Task<waxAssetData> GetTemplate(int template) {
-            UnityWebRequest www = await GetRequest("", "");
-            waxAssetData d = JsonUtility.FromJson<response>(www.downloadHandler.text).data[0];
+        public static async Task<NftAssetContainer> GetTemplate(int template) {
+            var www = await GetRequest("", "");
+            //NftAssetContainer d = JsonUtility.FromJson<response>(www.downloadHandler.text).data[0];
             www.Dispose();
-            return d;
+            //return d;
+            return null;
         }
-
         public static async Task<string> GetBalance(string symbol = "WAX", string code = "eosio.token") {
-            PostData data = new PostData();
-            data.json = true;
-            data.code = code;
-            //data.scope = Account;
-            data.table = "accounts";
-            data.lower_bound = symbol;
-            data.upper_bound = symbol;
-            data.limit = 1;
-            UnityWebRequest www = UnityWebRequest.Put("https://wax.greymass.com/v1/chain/get_table_rows",
+            var data = new PostData {
+                json = true,
+                code = code,
+                //data.scope = Account;
+                table = "accounts",
+                lower_bound = symbol,
+                upper_bound = symbol,
+                limit = 1
+            };
+            var www = UnityWebRequest.Put("https://wax.greymass.com/v1/chain/get_table_rows",
                 JsonUtility.ToJson(data));
             www.SetRequestHeader("Content-Type", "application/json");
             www.SendWebRequest();
@@ -210,13 +201,12 @@ namespace Pixygon.NFT {
                 return string.Empty;
             }
 
-            AccountResult accountResult = JsonUtility.FromJson<AccountResult>(www.downloadHandler.text);
+            var accountResult = JsonUtility.FromJson<AccountResult>(www.downloadHandler.text);
             www.Dispose();
             if (accountResult.rows.Length == 0) {
                 return "0";
-            }
-            else {
-                string balance = accountResult.rows[0].balance;
+            } else {
+                var balance = accountResult.rows[0].balance;
                 return balance;
             }
         }
@@ -235,6 +225,6 @@ namespace Pixygon.NFT {
 
     [Serializable]
     public class FetchedAssets {
-        public waxAsset[] assets;
+        //public waxAsset[] assets;
     }
 }

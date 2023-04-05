@@ -43,7 +43,7 @@ namespace Pixygon.NFT {
         //public Tool RequiredTool => Tool.None;
         public int RequiredToolLevel => 0;
         public Transform Root => _root;
-        public waxAsset NFTAsset { get; private set; }
+        public NftAssetContainer NFTAsset { get; private set; }
 
         public float Size;
         public bool IsFurniture { get; private set; }
@@ -53,7 +53,7 @@ namespace Pixygon.NFT {
         public List<NftActionAsset> actions = new List<NftActionAsset>();
 
 
-        public virtual void Initialize(waxAsset a, Transform player, float size, bool isFurniture = false,
+        public virtual void Initialize(NftAssetContainer a, Transform player, float size, bool isFurniture = false,
             List<string> actionAssets = null) {
             NFTAsset = a;
             _player = player;
@@ -83,7 +83,7 @@ namespace Pixygon.NFT {
         }
 
 
-        public async virtual void InitializePreview(waxAsset a, Transform player, float size) {
+        public async virtual void InitializePreview(NftAssetContainer a, Transform player, float size) {
             _isPreview = true;
             GetComponent<BoxCollider>().enabled = false;
             

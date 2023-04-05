@@ -6,30 +6,79 @@ using Pixygon.Saving;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace Pixygon.NFT.Eth {
-    public class EthNFT : MonoBehaviour {
+namespace Pixygon.NFT.Wax {
+    public class WaxNFT : MonoBehaviour {
+        //EndpointList: https://validate.eosnation.io/wax/reports/endpoints.html
+
+        private static float _lastNodeUpdate;
+        private static endpoints _nodes;
         private static string account = string.Empty;
 
         private static string Account {
             get {
-                if (string.IsNullOrWhiteSpace(account) && !string.IsNullOrWhiteSpace(SaveManager.SettingsSave._user.ethWallet))
-                    account = SaveManager.SettingsSave._user.ethWallet;
+                if (string.IsNullOrWhiteSpace(account) && !string.IsNullOrWhiteSpace(SaveManager.SettingsSave._user.waxWallet))
+                    account = SaveManager.SettingsSave._user.waxWallet;
                 return account;
             }
         }
+        private static async Task CheckNodes() {
+            if (_nodes == null || (Time.realtimeSinceStartup - _lastNodeUpdate) > 600f) {
+                //string json = await PixygonAPI.GetEndpointNodesAsync();
+                //nodes = JsonUtility.FromJson<endpoints>(json);
+                _nodes = new endpoints {
+                    nodeEndpoints = new[] {
+                        "atomic-api.wax.cryptolions.io",
+                        "wax-aa.eosdac.io",
+                        "wax.api.atomicassets.io",
+                        //"wax.greymass.com",             //Did not work!
+                        "wax-aa.eu.eosamsterdam.net",
+                        "wax.blokcrafters.io",
+                        //"apiwax.3dkrender.com",         //Did not work!
+                        //"query.3dkrender.com",          //Did not work!
+                        "aa-wax-public1.neftyblocks.com",
+                        //"aa-wax-public2.neftyblocks.com",       //Did not work!
+                        //"api.wax.greeneosio.com",       //Did not work!
+                        //"api.waxsweden.org",       //Did not work!
+                        //"wax.api.eosnation.io",       //Did not work!
+                        //"wax.pink.gg",       //Did not work!
+                        //"api.wax-aa.bountyblok.io",
+                        "atomicassets.ledgerwise.io",
+                        "wax-atomic-api.eosphere.io",
+                        "atomic.wax.eosrio.io",
+                        "aa-api-wax.eosauthority.com",
+                        "atomic.sentnl.io",
+                        "atomic.wax.tgg.gg"
+                        //"api-wax-aa.eosarabia.net"
+                        
+                    }
+                };
+                _lastNodeUpdate = Time.realtimeSinceStartup;
+            }
+        }
         private static async Task<UnityWebRequest> GetRequest(string url, int page = 1, int limit = 250) {
-            var www = UnityWebRequest.Get($"https://api.rarible.org/v0.1/{url}");
-            www.timeout = 60;
-            www.SendWebRequest();
-            while (!www.isDone) 
-                await Task.Yield();
-            if (www.error == null) 
-                return www;
-            Log.DebugMessage(DebugGroup.Nft, $"Something went wrong while fetching Ethereum NFT-data from Rarible: {www.error}\nURL: {www.url}");
+            await CheckNodes();
+            var retry = 0;
+            var maxTries = _nodes.nodeEndpoints.Length;
+            while (retry < maxTries) {
+                var endPoint = _nodes.GetEndpoint;
+                var www = UnityWebRequest.Get($"https://{endPoint}/atomicassets/v1/{url}&page={page}&limit={limit}");
+                www.timeout = 60;
+                www.SendWebRequest();
+                while (!www.isDone)
+                    await Task.Yield();
+                if (www.error == null)
+                    return www;
+
+
+                Log.DebugMessage(DebugGroup.Nft, $"Something went wrong while fetching NFT-data on EndPoint {endPoint}: {www.error}\nURL: {www.url}\nRetry: {retry}");
+                retry += 1;
+            }
+
+            Log.DebugMessage(DebugGroup.Nft, $"Retried NFT Fetch {maxTries} times, and still couldn't get it :(");
             return null;
         }
-        private static waxAsset[] GetList(response response) {
-            var wax = new List<waxAsset>();
+        private static NftAssetContainer[] GetList(response response) {
+            var wax = new List<NftAssetContainer>();
             foreach (var data in response.data) {
                 var found = false;
                 foreach (var waxasset in wax) {
@@ -42,14 +91,7 @@ namespace Pixygon.NFT.Eth {
 
                 if (found) continue;
                 {
-                    var waxasset = new waxAsset {
-                        name = data.name,
-                        templateInfo = new NFTTemplateInfo(data.template.template_id, data.schema.schema_name, data.collection.collection_name, Chain.Wax),
-                        //waxasset.templateID = data.template.template_id;
-                        ipfs = data.data.img,
-                        description = data.data.Description,
-                        collectionName = data.collection.collection_name
-                    };
+                    var waxasset = new NftAssetContainer(data);
                     var listAssetData2 = new List<AssetData> { //waxasset.assets = new List<AssetData>();
                         new AssetData(data.asset_id, data.owner, data.template_mint, data.template.issued_supply, data.template.max_supply) };
                     waxasset.assets = listAssetData2.ToArray();
@@ -63,7 +105,7 @@ namespace Pixygon.NFT.Eth {
         /// Invokes 'finish' method and returns templates found
         /// </summary>
         /// <param name="info"></param>
-        public static async Task<waxAsset[]> FetchAssets(NFTTemplateInfo info) {
+        public static async Task<NftAssetContainer[]> FetchAssets(NFTTemplateInfo info) {
             var url = "assets?owner=" + Account;
             if (info.collection != string.Empty)
                 url += "&collection_name=" + info.collection;
@@ -76,8 +118,8 @@ namespace Pixygon.NFT.Eth {
             www.Dispose();
             return a;
         }
-        public static async Task<waxAsset[]> FetchAllAssets(string collectionFilter = "") {
-            var allAssets = new List<waxAsset>();
+        public static async Task<NftAssetContainer[]> FetchAllAssets(string collectionFilter = "") {
+            var allAssets = new List<NftAssetContainer>();
             var page = 1;
             var isComplete = false;
             var url = "assets?owner=" + Account;
@@ -112,23 +154,31 @@ namespace Pixygon.NFT.Eth {
         public static async Task<bool> ValidateTemplate(NFTTemplateInfo info) {
             if (info.template == -1) return false;
             if (string.IsNullOrWhiteSpace(Account)) {
-                Debug.Log("No ETH account to fetch NFT from!");
+                Debug.Log("No account to fetch NFT from!");
                 return false;
             }
-            var www = await GetRequest($"ownerships/ETHEREUM:{info.collection}:{info.schema}:{Account}");
-            if(www == null)
-                return false;
-            else {
-                Debug.Log($"This was the URL: ownerships/ETHEREUM:{info.collection}:{info.schema}:{Account}" +
-                          "\nThis is the ETH-response!! " + www.downloadHandler.text);
-                return true;
-            }
+            UnityWebRequest www = null;
+            www = await GetRequest($"assets?owner={Account}&template_id={info.template}");
+            var wax = GetList(JsonUtility.FromJson<response>(www.downloadHandler.text));
+            www.Dispose();
+            bool owned;
+            if (wax == null)
+                owned = false;
+            else if (wax.Length == 0)
+                owned = false;
+            else if (wax[0].assets == null)
+                owned = false;
+            else if (wax[0].assets.Length == 0)
+                owned = false;
+            else
+                owned = true;
+            return owned;
         }
-        public static async Task<waxAssetData> GetTemplate(int template) {
+        public static async Task<NftAssetContainer> GetTemplate(int template) {
             var www = await GetRequest($"assets?template_id={template}&limit=100&order=desc&sort=asset_id");
             var d = JsonUtility.FromJson<response>(www.downloadHandler.text).data[0];
             www.Dispose();
-            return d;
+            return new NftAssetContainer(d);
         }
         public static async Task<string> GetBalance(string symbol = "WAX", string code = "eosio.token") {
             var data = new PostData {
@@ -156,8 +206,8 @@ namespace Pixygon.NFT.Eth {
             www.Dispose();
             return accountResult.rows.Length == 0 ? "0" : accountResult.rows[0].balance;
         }
-        public static async Task<waxAsset[]> FetchAllAssetsInWallet(string wallet) {
-            var allAssets = new List<waxAsset>();
+        public static async Task<NftAssetContainer[]> FetchAllAssetsInWallet(string wallet) {
+            var allAssets = new List<NftAssetContainer>();
             var page = 1;
             var isComplete = false;
             var url = "assets?owner=" + Account;

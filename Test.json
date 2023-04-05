@@ -1,0 +1,103 @@
+{
+  "success": true,
+  "data": [
+    {
+      "contract": "atomicassets",
+      "asset_id": "1099871990093",
+      "owner": "md1qw.wam",
+      "is_transferable": true,
+      "is_burnable": true,
+      "collection": {
+        "collection_name": "pixygon",
+        "name": "Pixygon",
+        "img": "QmV5sFVBd1xYVp6xjqqoBG1epA8XtyQDDK865Rq56EMcnr",
+        "author": "pixygon",
+        "allow_notify": true,
+        "authorized_accounts": [
+          "pixygon",
+          "md1qw.wam",
+          "neftyblocksd",
+          "magnta555nft",
+          "neftyblocksp",
+          "atomicpacksx"
+        ],
+        "notify_accounts": [],
+        "market_fee": 0.1,
+        "created_at_block": "201423061",
+        "created_at_time": "1662171344000"
+      },
+      "schema": {
+        "schema_name": "consolcustom",
+        "format": [
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "video",
+            "type": "ipfs"
+          },
+          {
+            "name": "artist",
+            "type": "string"
+          },
+          {
+            "name": "artist Info",
+            "type": "string"
+          },
+          {
+            "name": "console",
+            "type": "string"
+          },
+          {
+            "name": "rarity",
+            "type": "string"
+          }
+        ],
+        "created_at_block": "215373643",
+        "created_at_time": "1669150687000"
+      },
+      "template": {
+        "template_id": "650429",
+        "max_supply": "10",
+        "is_transferable": true,
+        "is_burnable": true,
+        "issued_supply": "10",
+        "immutable_data": {
+          "name": "Breadcritter - Faceplate",
+          "video": "Qmawn8K5rD3g6uvdjwSKS96N64G8SGxwd5XNhFzFCJMd6E",
+          "artist": "BreadlyToast",
+          "rarity": "legendary",
+          "console": "Pixygonµ",
+          "artist Info": "https://twitter.com/Breadlytoast"
+        },
+        "created_at_time": "1673991822500",
+        "created_at_block": "225048757"
+      },
+      "mutable_data": {},
+      "immutable_data": {},
+      "template_mint": "10",
+      "backed_tokens": [],
+      "burned_by_account": null,
+      "burned_at_block": null,
+      "burned_at_time": null,
+      "updated_at_block": "237467306",
+      "updated_at_time": "1680203534000",
+      "transferred_at_block": "237467306",
+      "transferred_at_time": "1680203534000",
+      "minted_at_block": "237248491",
+      "minted_at_time": "1680094124000",
+      "data": {
+        "name": "Breadcritter - Faceplate",
+        "video": "Qmawn8K5rD3g6uvdjwSKS96N64G8SGxwd5XNhFzFCJMd6E",
+        "artist": "BreadlyToast",
+        "rarity": "legendary",
+        "console": "Pixygonµ",
+        "artist Info": "https://twitter.com/Breadlytoast"
+      },
+      "name": "Breadcritter - Faceplate"
+    }
+  ],
+  "query_time": 1680655845960
+}{
+}

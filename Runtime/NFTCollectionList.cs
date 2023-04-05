@@ -10,6 +10,8 @@ namespace Pixygon.NFT {
     [CreateAssetMenu(fileName = "New NFTCollections", menuName = "Pixygon/NFTCollections")]
     [Serializable]
     public class NFTCollectionList : ScriptableObject {
+        //DEPRECATED
+        /*
         public NFTCollection[] NFTCollections;
         public AssetReference[] NFTCollectionReferences;
 
@@ -97,5 +99,6 @@ namespace Pixygon.NFT {
 
             isInitialized = true;
         }
+        */
     }
 }

@@ -43,6 +43,7 @@ namespace Pixygon.NFT {
         public async void GetTemplate() {
             //if(template == 0)
             //    return;
+            /*
             waxAssetData t = await NFT.GetTemplate(NFTLink.Template[0].template);
             if(t == null)
                 Debug.Log("Wrong template");
@@ -74,11 +75,12 @@ namespace Pixygon.NFT {
             UnityEditor.AssetDatabase.SaveAssets();
             UnityEditor.AssetDatabase.Refresh();
 #endif
+            */
         }
 
 
         public string DisplayInfo() {
-            StringBuilder nftDataText = new StringBuilder();
+            var nftDataText = new StringBuilder();
             nftDataText.Append("Type: ");
             nftDataText.Append(type);
             nftDataText.Append("\nAction: ");
@@ -88,15 +90,6 @@ namespace Pixygon.NFT {
             return nftDataText.ToString();
         }
     }
-    
-    public class WaxAssetContainer : PagedContentDataObject {
-        public waxAsset asset;
-
-        public WaxAssetContainer(waxAsset a) {
-            this.asset = a;
-        }
-    }
-
     public enum NFTPlacement {
         Anywhere,
         Horizontal,
