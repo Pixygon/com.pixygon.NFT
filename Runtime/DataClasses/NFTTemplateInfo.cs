@@ -25,7 +25,7 @@ namespace Pixygon.NFT {
             if(t == null)
                 Debug.Log("Wrong template");
             else {
-                collection = t.collectionName;
+                collection = t.CollectionName;
                 //schema = t.schema.schema_name;
             }
         }

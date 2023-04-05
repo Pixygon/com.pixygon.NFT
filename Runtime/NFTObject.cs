@@ -94,7 +94,7 @@ namespace Pixygon.NFT {
             //    return;
             //}
 
-            switch(NFTAsset.type) {
+            switch(NFTAsset.MediaType) {
                 case NFTType.Image:
                 //if(NFTAsset.Data.nftAction == NFTAction.Randomize) {
                 //    _nft = await AddressableLoader.LoadGameObject(NFTAsset.Data.modelRef, _uiObjectParent);
@@ -105,7 +105,7 @@ namespace Pixygon.NFT {
                         _nft.transform.localRotation = Quaternion.identity;
                         _nft.transform.localScale = Vector3.one;
                         _nft.GetComponent<Image>().color = new Color(.2f, .7f, 1f, .5f);
-                        _nft.GetComponent<Image>().sprite = await NFT.GetImageFromIpfs(NFTAsset.ipfs);
+                        _nft.GetComponent<Image>().sprite = await NFT.GetImageFromIpfs(NFTAsset.IpfsHashes[0]);
                     //_nft = await AddressableLoader.LoadGameObject(NFTAsset.Data.prefabRef, _uiObjectParent);
                     //_nft.transform.localRotation = Quaternion.identity;
                     //_nft.transform.localScale = Vector3.one;
@@ -123,8 +123,8 @@ namespace Pixygon.NFT {
                 //_nft.transform.localRotation = Quaternion.identity;
                 //_nft.transform.localScale = Vector3.one;
                 SetPreviewMaterial();
-                Collider[] colliders = _nft.GetComponentsInChildren<Collider>();
-                foreach(Collider col in colliders) {
+                var colliders = _nft.GetComponentsInChildren<Collider>();
+                foreach(var col in colliders) {
                     col.enabled = false;
                 }
                 break;
@@ -153,7 +153,7 @@ namespace Pixygon.NFT {
         }
         [ContextMenu("Resize Collider")]
         public void ResizeColliderAroundChildren() {
-            GameObject assetModel = gameObject;
+            var assetModel = gameObject;
             var pos = assetModel.transform.localPosition;
             var rot = assetModel.transform.localRotation;
             var scale = assetModel.transform.localScale;
@@ -175,7 +175,7 @@ namespace Pixygon.NFT {
 
 
             var descendants = assetModel.GetComponentsInChildren<Transform>();
-            foreach (Transform desc in descendants) {
+            foreach (var desc in descendants) {
                 if (desc.TryGetComponent<Renderer>(out var childRenderer)) {
                     // use this trick to see if initialized to renderer bounds yet
                     // https://answers.unity.com/questions/724635/how-does-boundsencapsulate-work.html
@@ -242,22 +242,22 @@ namespace Pixygon.NFT {
 
 
         public void RemoveAction(string actionName) {
-            List<NftActionAsset> assets = actions.Where(a => a._actionName == actionName).ToList();
+            var assets = actions.Where(a => a._actionName == actionName).ToList();
 
-            foreach (NftActionAsset a in assets) {
+            foreach (var a in assets) {
                 a.Kill();
                 actions.Remove(a);
             }
         }
 
         public void RemoveActions(List<string> actionNamesToRemove) {
-            NftActionAsset[] actionsToRemove = _actionsList._nftActions
+            var actionsToRemove = _actionsList._nftActions
                 .Where(action => actionNamesToRemove.Contains(action._actionName)).ToArray();
 
-            foreach (NftActionAsset action in actionsToRemove) {
-                List<NftActionAsset> assets = actions.Where(a => a._actionName == action._actionName).ToList();
+            foreach (var action in actionsToRemove) {
+                var assets = actions.Where(a => a._actionName == action._actionName).ToList();
 
-                foreach (NftActionAsset a in assets) {
+                foreach (var a in assets) {
                     a.Kill();
                     actions.Remove(a);
                 }
@@ -265,24 +265,19 @@ namespace Pixygon.NFT {
         }
 
         public void RemoveActionsOfType(NftActionType type) {
-            List<NftActionAsset> assets = actions.Where(a => a._type == type).ToList();
-            foreach (NftActionAsset a in assets) {
+            var assets = actions.Where(a => a._type == type).ToList();
+            foreach (var a in assets) {
                 a.Kill();
                 actions.Remove(a);
             }
         }
 
         public bool HasActionsOfType(NftActionType type) {
-            foreach (NftActionAsset action in actions) {
-                if (action._type == type)
-                    return true;
-            }
-
-            return false;
+            return actions.Any(action => action._type == type);
         }
 
-        void UpdateActions() {
-            foreach (NftActionAsset action in actions) {
+        private void UpdateActions() {
+            foreach (var action in actions) {
                 action.Update();
             }
         }
@@ -292,36 +287,38 @@ namespace Pixygon.NFT {
             Size = size;
             if (_nft == null)
                 return;
-            if (NFTAsset.type == NFTType.Model) {
-                //_nft.transform.localScale = Vector3.Lerp(Vector3.one * NFTAsset.Data.minScale,
-                //    Vector3.one * NFTAsset.Data.maxScale, size);
-            }
-            else if (NFTAsset.type == NFTType.Video) {
-                //_nft.transform.localScale = Vector3.Lerp(Vector3.one * NFTAsset.Data.minScale,
-                //    Vector3.one * NFTAsset.Data.maxScale, size); //VIDEO ERROR
-            }
-            else {
-                //_root.localScale = Vector3.Lerp(Vector3.one * NFTAsset.Data.minScale,
-                //    Vector3.one * NFTAsset.Data.maxScale, size);
+            switch (NFTAsset.MediaType) {
+                case NFTType.Model:
+                    //_nft.transform.localScale = Vector3.Lerp(Vector3.one * NFTAsset.Data.minScale,
+                    //    Vector3.one * NFTAsset.Data.maxScale, size);
+                    break;
+                case NFTType.Video:
+                    //_nft.transform.localScale = Vector3.Lerp(Vector3.one * NFTAsset.Data.minScale,
+                    //    Vector3.one * NFTAsset.Data.maxScale, size); //VIDEO ERROR
+                    break;
+                default:
+                    //_root.localScale = Vector3.Lerp(Vector3.one * NFTAsset.Data.minScale,
+                    //    Vector3.one * NFTAsset.Data.maxScale, size);
+                    break;
             }
         }
 
 
         private void SetPreviewMaterial() {
-            Renderer meshRenderer = _nft.GetComponent<Renderer>();
+            var meshRenderer = _nft.GetComponent<Renderer>();
             if (meshRenderer != null) {
-                Material[] mats = meshRenderer.sharedMaterials;
-                for (int i = 0; i < mats.Length; i++) {
+                var mats = meshRenderer.sharedMaterials;
+                for (var i = 0; i < mats.Length; i++) {
                     mats[i] = _previewMaterial;
                 }
 
                 meshRenderer.sharedMaterials = mats;
             }
 
-            Renderer[] meshRenderers = _nft.GetComponentsInChildren<Renderer>();
-            foreach (Renderer m in meshRenderers) {
-                Material[] mats = m.sharedMaterials;
-                for (int i = 0; i < mats.Length; i++) {
+            var meshRenderers = _nft.GetComponentsInChildren<Renderer>();
+            foreach (var m in meshRenderers) {
+                var mats = m.sharedMaterials;
+                for (var i = 0; i < mats.Length; i++) {
                     mats[i] = _previewMaterial;
                 }
 
@@ -330,36 +327,36 @@ namespace Pixygon.NFT {
         }
 
         private void SetColliders() {
-            Renderer meshRenderer = _nft.GetComponent<Renderer>();
+            var meshRenderer = _nft.GetComponent<Renderer>();
             if (meshRenderer != null) {
                 meshRenderer.gameObject.AddComponent<MeshCollider>();
             }
 
-            Renderer[] meshRenderers = _nft.GetComponentsInChildren<Renderer>();
-            foreach (Renderer m in meshRenderers) {
+            var meshRenderers = _nft.GetComponentsInChildren<Renderer>();
+            foreach (var m in meshRenderers) {
                 m.gameObject.AddComponent<MeshCollider>();
             }
         }
 
         private async Task GetImageFromIPFS(string hash) {
             
-            UnityWebRequest www = UnityWebRequestTexture.GetTexture(string.Format("https://ipfs.atomichub.io/ipfs/{0}", hash));
+            var www = UnityWebRequestTexture.GetTexture(string.Format("https://ipfs.atomichub.io/ipfs/{0}", hash));
             www.SendWebRequest();
             while(!www.isDone)
                 await Task.Yield();
             if(www.error == null) {
-                Texture2D t = DownloadHandlerTexture.GetContent(www);
+                var t = DownloadHandlerTexture.GetContent(www);
                 _nft.GetComponent<Image>().sprite = Sprite.Create(t, new Rect(0f, 0f, t.width, t.height), new Vector2(.5f, .5f));
                 Debug.Log("Got texture");
             }
         }
         private async void SetNFTType() {
-            switch (NFTAsset.type) {
+            switch (NFTAsset.MediaType) {
                 case NFTType.Image:
                     _nft = Instantiate(_spriteBase, _uiObjectParent);
                     _nft.transform.localRotation = Quaternion.identity;
                     _nft.transform.localScale = Vector3.one;
-                    _nft.GetComponent<Image>().sprite = await NFT.GetImageFromIpfs(NFTAsset.ipfs);
+                    _nft.GetComponent<Image>().sprite = await NFT.GetImageFromIpfs(NFTAsset.IpfsHashes[0]);
                 break;
                 case NFTType.Model:
                     //_nft = await AddressableLoader.LoadGameObject(NFTAsset.Data.modelRef, _parent);
@@ -403,7 +400,7 @@ namespace Pixygon.NFT {
 
             SetSize(Size);
 
-            if (NFTAsset.type != NFTType.Book)
+            if (NFTAsset.MediaType != NFTType.Book)
                 ResizeColliderAroundChildren();
         }
 

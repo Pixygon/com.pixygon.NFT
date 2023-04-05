@@ -83,7 +83,7 @@ namespace Pixygon.NFT.Wax {
                 var found = false;
                 foreach (var waxasset in wax) {
                     var listAssetData = waxasset.assets.ToList();
-                    if (waxasset.templateInfo.template != data.template.template_id) continue;
+                    if (waxasset.TemplateInfo.template != data.template.template_id) continue;
                     listAssetData.Add(new AssetData(data.asset_id, data.owner, data.template_mint, data.template.issued_supply, data.template.max_supply));
                     found = true;
                     waxasset.assets = listAssetData.ToArray();

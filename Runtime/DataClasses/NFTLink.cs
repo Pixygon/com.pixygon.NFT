@@ -11,9 +11,7 @@ namespace Pixygon.NFT {
 
         public async Task GetTemplate() {
             RequiresNFT = true;
-            if(Template == null) {
-                Template = new NFTTemplateInfo[1];
-            }
+            Template ??= new NFTTemplateInfo[1];
             if(Template.Length == 0) {
                 Template = new NFTTemplateInfo[1];
             }

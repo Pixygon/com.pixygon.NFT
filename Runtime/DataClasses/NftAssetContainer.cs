@@ -5,16 +5,14 @@ using Pixygon.NFT.Wax;
 namespace Pixygon.NFT {
     public class NftAssetContainer : PagedContentDataObject {
         //public waxAsset asset;
-        public string name;
-        public string collectionName;
-        public string ipfs;
-        public string description;
-        public string video;
-        //public string chain;
-        //public int templateID;
-        //public string schemaID;
-        public NFTTemplateInfo templateInfo;
+        public string Title;
+        public string CollectionName;
+        public string Description;
+        public string[] IpfsHashes;
+        public NFTTemplateInfo TemplateInfo;
         public AssetData[] assets;
+        public NFTType MediaType;
+        public Chain Chain;
         
         public string DisplayInfo() {
             var nftDataText = new StringBuilder();
@@ -23,7 +21,7 @@ namespace Pixygon.NFT {
             //nftDataText.Append("\nAction: ");
             //nftDataText.Append(nftAction);
             nftDataText.Append("\nTemplateID: ");
-            nftDataText.Append(templateInfo.template);
+            nftDataText.Append(TemplateInfo.template);
             return nftDataText.ToString();
         }
 
@@ -37,21 +35,14 @@ namespace Pixygon.NFT {
             return info;
         }
         */
-        public NFTType type;
-
-        //public NftAssetContainer(waxAsset a) {
-        //    asset = a;
-            //Fill up the data here
-        //}
         public NftAssetContainer(waxAssetData a) {
-            name = a.name;
-            templateInfo = new NFTTemplateInfo(a.template.template_id, a.schema.schema_name,
+            Title = a.name;
+            TemplateInfo = new NFTTemplateInfo(a.template.template_id, a.schema.schema_name,
                 a.collection.collection_name, Chain.Wax);
-            //waxasset.templateID = data.template.template_id;
-            ipfs = a.data.img;
-            video = a.data.video;
-            description = a.data.Description;
-            collectionName = a.collection.collection_name;
+            IpfsHashes = !string.IsNullOrWhiteSpace(a.data.video) ? new[] { a.data.video } : new[] { a.data.img };
+            Description = a.data.Description;
+            CollectionName = a.collection.collection_name;
+            Chain = Chain.Wax;
         }
     }
 }
