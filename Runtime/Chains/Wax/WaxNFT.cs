@@ -167,14 +167,14 @@ namespace Pixygon.NFT.Wax {
             www.Dispose();
             return new NftTemplateObject(d);
         }
-        public static async Task<string> GetBalance(string symbol = "WAX", string code = "eosio.token") {
+        public static async Task<float> GetBalance() {
             var data = new PostData {
                 json = true,
-                code = code,
+                code = "eosio.token",
                 scope = Account,
                 table = "accounts",
-                lower_bound = symbol,
-                upper_bound = symbol,
+                lower_bound = "WAX",
+                upper_bound = "WAX",
                 limit = 1
             };
             var www = UnityWebRequest.Put("https://wax.greymass.com/v1/chain/get_table_rows",
@@ -186,12 +186,17 @@ namespace Pixygon.NFT.Wax {
             if (www.error != null) {
                 Debug.Log(www.error);
                 www.Dispose();
-                return string.Empty;
+                return 0f;
             }
 
             var accountResult = JsonUtility.FromJson<AccountResult>(www.downloadHandler.text);
             www.Dispose();
-            return accountResult.rows.Length == 0 ? "0" : accountResult.rows[0].balance;
+            if (accountResult.rows.Length == 0)
+                return 0f;
+            var s = accountResult.rows[0].balance;
+            var trimmedString = s.Remove(s.Length - 4, 4);
+            float.TryParse(trimmedString, out var f);
+            return f;
         }
         public static async Task<NftTemplateObject[]> FetchAllAssetsInWallet(string wallet) {
             var allAssets = new List<NftTemplateObject>();
@@ -211,23 +216,6 @@ namespace Pixygon.NFT.Wax {
                 www.Dispose();
             }
             return allAssets.ToArray();
-        }
-
-        public static async Task<float> FetchWaxPrice() {
-            var www = UnityWebRequest.Get("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=wax");
-            www.SetRequestHeader("Content-Type", "application/json");
-            www.SendWebRequest();
-            while (!www.isDone)
-                await Task.Yield();
-            if (www.error != null) {
-                Debug.Log(www.error);
-                www.Dispose();
-                return 0f;
-            }
-            Debug.Log(www.downloadHandler.text);
-            var price = JsonUtility.FromJson<CoinGeckoCoinValue[]>(www.downloadHandler.text);
-            www.Dispose();
-            return (float)price[0].current_price;
         }
     }
 }

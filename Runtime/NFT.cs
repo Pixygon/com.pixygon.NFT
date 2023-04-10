@@ -363,17 +363,19 @@ namespace Pixygon.NFT {
         public static async Task<NftTemplateObject> GetTemplate(int template) {
             return await WaxNFT.GetTemplate(template);
         }
-        public static async void GetBalance(Chain chain, OnBalanceGet success = null) {
+        public static async Task<float> GetBalance(Chain chain) {
             switch (chain) {
                 case Chain.Ethereum:
-                    success?.Invoke(await EthNFT.GetBalance());
+                    return await EthNFT.GetBalance();
                     break;
                 case Chain.Wax:
-                    success?.Invoke(await WaxNFT.GetBalance("WAX", "eosio.token"));
+                    return await WaxNFT.GetBalance();
                     break;
                 case Chain.Tezos:
                     break;
             }
+
+            return 0f;
         }
         public static void OpenOnAtomic(string collectionTitle, int template) {
             Application.OpenURL($"https://wax.atomichub.io/explorer/template/{collectionTitle}/{template}");

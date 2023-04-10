@@ -141,7 +141,7 @@ namespace Pixygon.NFT.Eth {
             */
             return null;
         }
-        public static async Task<string> GetBalance() {
+        public static async Task<float> GetBalance() {
             var www = UnityWebRequest.Get(
                 $"https://api.etherscan.io/api?module=account&action=balance" +
                 $"&address={Account}" +
@@ -154,13 +154,13 @@ namespace Pixygon.NFT.Eth {
             if (www.error != null) {
                 Debug.Log(www.error);
                 www.Dispose();
-                return string.Empty;
+                return 0f;
             }
             Debug.Log("Eth balance: " + www.downloadHandler.text);
             var balance = JsonUtility.FromJson<EthBalanceResponse>(www.downloadHandler.text);
             www.Dispose();
             //Balance is returned in WEI, must be converted to Eth
-            return (balance.result/1000000000000000000f).ToString();
+            return (balance.result/1000000000000000000f);
         }
         public static async Task<NftTemplateObject[]> FetchAllAssetsInWallet(string wallet) {
             /*
