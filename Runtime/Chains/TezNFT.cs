@@ -27,7 +27,7 @@ namespace Pixygon.NFT.Tez {
                 Log.DebugMessage(DebugGroup.Nft, $"Something went wrong while fetching Tezos NFT-data from Rarible: {www.error}\nURL: {www.url}");
                 return null;
         }
-        private static NftAssetObject[] GetList(response response) {
+        private static NftTemplateObject[] GetList(response response) {
             /*
             var wax = new List<waxAsset>();
             foreach (var data in response.data) {
@@ -65,7 +65,7 @@ namespace Pixygon.NFT.Tez {
         /// Invokes 'finish' method and returns templates found
         /// </summary>
         /// <param name="info"></param>
-        public static async Task<NftAssetObject[]> FetchAssets(NFTTemplateInfo info) {
+        public static async Task<NftTemplateObject[]> FetchAssets(NFTTemplateInfo info) {
             var url = "assets?owner=" + Account;
             if (info.collection != string.Empty)
                 url += "&collection_name=" + info.collection;
@@ -78,7 +78,7 @@ namespace Pixygon.NFT.Tez {
             www.Dispose();
             return a;
         }
-        public static async Task<NftAssetObject[]> FetchAllAssets(string collectionFilter = "") {
+        public static async Task<NftTemplateObject[]> FetchAllAssets(string collectionFilter = "") {
             /*
             var allAssets = new List<waxAsset>();
             var page = 1;
@@ -129,7 +129,7 @@ namespace Pixygon.NFT.Tez {
                 return true;
             }
         }
-        public static async Task<NftAssetObject> GetTemplate(int template) {
+        public static async Task<NftTemplateObject> GetTemplate(int template) {
             var www = await GetRequest($"assets?template_id={template}&limit=100&order=desc&sort=asset_id");
             //var d = JsonUtility.FromJson<response>(www.downloadHandler.text).data[0];
             www.Dispose();
@@ -162,7 +162,7 @@ namespace Pixygon.NFT.Tez {
             www.Dispose();
             return accountResult.rows.Length == 0 ? "0" : accountResult.rows[0].balance;
         }
-        public static async Task<NftAssetObject[]> FetchAllAssetsInWallet(string wallet) {
+        public static async Task<NftTemplateObject[]> FetchAllAssetsInWallet(string wallet) {
             /*
             var allAssets = new List<waxAsset>();
             var page = 1;

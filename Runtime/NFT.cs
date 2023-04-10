@@ -8,7 +8,7 @@ using UnityEngine.Networking;
 
 namespace Pixygon.NFT {
     public class NFT : MonoBehaviour {
-        public delegate void OnFinish(NftAssetObject[] assets);
+        public delegate void OnFinish(NftTemplateObject[] assets);
         public delegate void OnSuccess();
         public delegate void OnSuccessString(string s);
         public delegate void OnFail();
@@ -177,7 +177,7 @@ namespace Pixygon.NFT {
                     break;
             }
         }
-        public static async Task<NftAssetObject[]> FetchAssets(NFTTemplateInfo info) {
+        public static async Task<NftTemplateObject[]> FetchAssets(NFTTemplateInfo info) {
             switch(info.chain) {
                 case Chain.Wax:
                 return await WaxNFT.FetchAssets(info);
@@ -339,11 +339,41 @@ namespace Pixygon.NFT {
 
         }
 
-        public static async Task<NftAssetObject> GetTemplate(int template) {
+        public static async Task<float> FetchCoinPrice(Chain chain) {
+            //https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=wax
+            //https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=ethereum
+            //https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=tezos
+            var www = UnityWebRequest.Get($"https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids={chain.ToString().ToLower()}");
+            www.SetRequestHeader("Content-Type", "application/json");
+            www.SendWebRequest();
+            while (!www.isDone)
+                await Task.Yield();
+            if (www.error != null) {
+                Debug.Log(www.error);
+                www.Dispose();
+                return 0f;
+            }
+            Debug.Log(www.downloadHandler.text);
+            var price = JsonUtility.FromJson<CoinGeckoCoinValue[]>(www.downloadHandler.text);
+            www.Dispose();
+            return (float)price[0].current_price;
+        }
+
+
+        public static async Task<NftTemplateObject> GetTemplate(int template) {
             return await WaxNFT.GetTemplate(template);
         }
-        public static async void GetBalance(string symbol = "WAX", OnBalanceGet success = null, string code = "eosio.token") {
-            success?.Invoke(await WaxNFT.GetBalance(symbol, code));
+        public static async void GetBalance(Chain chain, OnBalanceGet success = null) {
+            switch (chain) {
+                case Chain.Ethereum:
+                    success?.Invoke(await EthNFT.GetBalance());
+                    break;
+                case Chain.Wax:
+                    success?.Invoke(await WaxNFT.GetBalance("WAX", "eosio.token"));
+                    break;
+                case Chain.Tezos:
+                    break;
+            }
         }
         public static void OpenOnAtomic(string collectionTitle, int template) {
             Application.OpenURL($"https://wax.atomichub.io/explorer/template/{collectionTitle}/{template}");

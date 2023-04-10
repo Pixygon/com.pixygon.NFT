@@ -72,8 +72,8 @@ namespace Pixygon.NFT.Wax {
             Log.DebugMessage(DebugGroup.Nft, $"Retried NFT Fetch {maxTries} times, and still couldn't get it :(");
             return null;
         }
-        private static NftAssetObject[] GetList(response response) {
-            var wax = new List<NftAssetObject>();
+        private static NftTemplateObject[] GetList(response response) {
+            var wax = new List<NftTemplateObject>();
             foreach (var data in response.data) {
                 var found = false;
                 foreach (var waxasset in wax) {
@@ -84,7 +84,7 @@ namespace Pixygon.NFT.Wax {
                     waxasset.assets = listAssetData.ToArray();
                 }
                 if (found) continue; {
-                    var waxasset = new NftAssetObject(data);
+                    var waxasset = new NftTemplateObject(data);
                     var listAssetData2 = new List<AssetData> { //waxasset.assets = new List<AssetData>();
                         new AssetData(data.asset_id, data.owner, data.template_mint, data.template.issued_supply, data.template.max_supply) };
                     waxasset.assets = listAssetData2.ToArray();
@@ -98,7 +98,7 @@ namespace Pixygon.NFT.Wax {
         /// Invokes 'finish' method and returns templates found
         /// </summary>
         /// <param name="info"></param>
-        public static async Task<NftAssetObject[]> FetchAssets(NFTTemplateInfo info) {
+        public static async Task<NftTemplateObject[]> FetchAssets(NFTTemplateInfo info) {
             var url = "assets?owner=" + Account;
             if (info.collection != string.Empty)
                 url += "&collection_name=" + info.collection;
@@ -111,8 +111,8 @@ namespace Pixygon.NFT.Wax {
             www.Dispose();
             return a;
         }
-        public static async Task<NftAssetObject[]> FetchAllAssets(string collectionFilter = "") {
-            var allAssets = new List<NftAssetObject>();
+        public static async Task<NftTemplateObject[]> FetchAllAssets(string collectionFilter = "") {
+            var allAssets = new List<NftTemplateObject>();
             var page = 1;
             var isComplete = false;
             var url = "assets?owner=" + Account;
@@ -161,11 +161,11 @@ namespace Pixygon.NFT.Wax {
                 owned = true;
             return owned;
         }
-        public static async Task<NftAssetObject> GetTemplate(int template) {
+        public static async Task<NftTemplateObject> GetTemplate(int template) {
             var www = await GetRequest($"assets?template_id={template}&limit=100&order=desc&sort=asset_id");
             var d = JsonUtility.FromJson<response>(www.downloadHandler.text).data[0];
             www.Dispose();
-            return new NftAssetObject(d);
+            return new NftTemplateObject(d);
         }
         public static async Task<string> GetBalance(string symbol = "WAX", string code = "eosio.token") {
             var data = new PostData {
@@ -193,8 +193,8 @@ namespace Pixygon.NFT.Wax {
             www.Dispose();
             return accountResult.rows.Length == 0 ? "0" : accountResult.rows[0].balance;
         }
-        public static async Task<NftAssetObject[]> FetchAllAssetsInWallet(string wallet) {
-            var allAssets = new List<NftAssetObject>();
+        public static async Task<NftTemplateObject[]> FetchAllAssetsInWallet(string wallet) {
+            var allAssets = new List<NftTemplateObject>();
             var page = 1;
             var isComplete = false;
             var url = "assets?owner=" + Account;
@@ -211,6 +211,23 @@ namespace Pixygon.NFT.Wax {
                 www.Dispose();
             }
             return allAssets.ToArray();
+        }
+
+        public static async Task<float> FetchWaxPrice() {
+            var www = UnityWebRequest.Get("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=wax");
+            www.SetRequestHeader("Content-Type", "application/json");
+            www.SendWebRequest();
+            while (!www.isDone)
+                await Task.Yield();
+            if (www.error != null) {
+                Debug.Log(www.error);
+                www.Dispose();
+                return 0f;
+            }
+            Debug.Log(www.downloadHandler.text);
+            var price = JsonUtility.FromJson<CoinGeckoCoinValue[]>(www.downloadHandler.text);
+            www.Dispose();
+            return (float)price[0].current_price;
         }
     }
 }

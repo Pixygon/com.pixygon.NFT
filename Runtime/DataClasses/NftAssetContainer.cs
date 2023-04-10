@@ -5,10 +5,11 @@ using Pixygon.NFT.Wax;
 namespace Pixygon.NFT {
     public class NftAssetContainer : PagedContentDataObject {
         //public waxAsset asset;
-        public NftAssetObject _nftObject;
+        public NftTemplateObject _nftObject;
     }
 
-    public class NftAssetObject {
+    //This is a template
+    public class NftTemplateObject {
         public string Title;
         public string CollectionName;
         public string Description;
@@ -24,7 +25,7 @@ namespace Pixygon.NFT {
             nftDataText.Append(TemplateInfo.template);
             return nftDataText.ToString();
         }
-        public NftAssetObject(waxAssetData a) {
+        public NftTemplateObject(waxAssetData a) {
             Title = a.name;
             TemplateInfo = new NFTTemplateInfo(a.template.template_id, a.schema.schema_name,
                 a.collection.collection_name, Chain.Wax);
@@ -34,4 +35,9 @@ namespace Pixygon.NFT {
             Chain = Chain.Wax;
         }
     }
+
+    //public class NftAssetObject {
+    //    public string AssetId;
+    //    public int Mint;
+    //}
 }

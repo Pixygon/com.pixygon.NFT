@@ -112,7 +112,7 @@ namespace Pixygon.NFT {
         /// </summary>
         /// <param name="info"></param>
         /// <param name="finish"></param>
-        public static async Task<NftAssetObject[]> FetchAssets(NFTTemplateInfo info) {
+        public static async Task<NftTemplateObject[]> FetchAssets(NFTTemplateInfo info) {
             var url = "FetchAsset";
             var json = JsonUtility.ToJson(new NFTRequest(info, GetWallet(info.chain)));
             Debug.Log(url + "\n" + json);
@@ -124,8 +124,8 @@ namespace Pixygon.NFT {
             //return a;
             return null;
         }
-        public static async Task<NftAssetObject[]> FetchAllAssets(string collectionFilter = "") {
-            var allAssets = new List<NftAssetObject>();
+        public static async Task<NftTemplateObject[]> FetchAllAssets(string collectionFilter = "") {
+            var allAssets = new List<NftTemplateObject>();
             var page = 1;
             var isComplete = false;
             var url = "assets?owner=";// + Account;
@@ -139,7 +139,7 @@ namespace Pixygon.NFT {
                     isComplete = true;
                     break;
                 }
-                NftAssetObject[] a = null; // GetList(JsonUtility.FromJson<response>(www.downloadHandler.text));
+                NftTemplateObject[] a = null; // GetList(JsonUtility.FromJson<response>(www.downloadHandler.text));
                 allAssets.AddRange(a);
                 www.Dispose();
             }
@@ -157,7 +157,7 @@ namespace Pixygon.NFT {
                 return false;
             var json = JsonUtility.ToJson(new NFTRequest(info, GetWallet(info.chain)));
             var www = await GetRequest("ValidateTemplate", json);
-            NftAssetObject[] wax = null; //GetList(JsonUtility.FromJson<response>(www.downloadHandler.text));
+            NftTemplateObject[] wax = null; //GetList(JsonUtility.FromJson<response>(www.downloadHandler.text));
             www.Dispose();
             bool owned;
             if (wax == null)
@@ -172,7 +172,7 @@ namespace Pixygon.NFT {
                 owned = true;
             return owned;
         }
-        public static async Task<NftAssetObject> GetTemplate(int template) {
+        public static async Task<NftTemplateObject> GetTemplate(int template) {
             var www = await GetRequest("", "");
             //NftAssetContainer d = JsonUtility.FromJson<response>(www.downloadHandler.text).data[0];
             www.Dispose();

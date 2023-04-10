@@ -29,7 +29,7 @@ namespace Pixygon.NFT.Eth {
             return null;
         }
         //Must implement
-        private static NftAssetObject[] GetList(response response) {
+        private static NftTemplateObject[] GetList(response response) {
             /*
             var wax = new List<waxAsset>();
             foreach (var data in response.data) {
@@ -67,7 +67,7 @@ namespace Pixygon.NFT.Eth {
         /// Invokes 'finish' method and returns templates found
         /// </summary>
         /// <param name="info"></param>
-        public static async Task<NftAssetObject[]> FetchAssets(NFTTemplateInfo info) {
+        public static async Task<NftTemplateObject[]> FetchAssets(NFTTemplateInfo info) {
             var url = "assets?owner=" + Account;
             if (info.collection != string.Empty)
                 url += "&collection_name=" + info.collection;
@@ -80,7 +80,7 @@ namespace Pixygon.NFT.Eth {
             www.Dispose();
             return a;
         }
-        public static async Task<NftAssetObject[]> FetchAllAssets(string collectionFilter = "") {
+        public static async Task<NftTemplateObject[]> FetchAllAssets(string collectionFilter = "") {
             /*
             var allAssets = new List<waxAsset>();
             var page = 1;
@@ -132,7 +132,7 @@ namespace Pixygon.NFT.Eth {
                 return true;
             }
         }
-        public static async Task<NftAssetObject> GetTemplate(int template) {
+        public static async Task<NftTemplateObject> GetTemplate(int template) {
             /*
             var www = await GetRequest($"assets?template_id={template}&limit=100&order=desc&sort=asset_id");
             var d = JsonUtility.FromJson<response>(www.downloadHandler.text).data[0];
@@ -141,18 +141,12 @@ namespace Pixygon.NFT.Eth {
             */
             return null;
         }
-        public static async Task<string> GetBalance(string symbol = "WAX", string code = "eosio.token") {
-            var data = new PostData {
-                json = true,
-                code = code,
-                scope = Account,
-                table = "accounts",
-                lower_bound = symbol,
-                upper_bound = symbol,
-                limit = 1
-            };
-            var www = UnityWebRequest.Put("https://wax.greymass.com/v1/chain/get_table_rows",
-                JsonUtility.ToJson(data));
+        public static async Task<string> GetBalance() {
+            var www = UnityWebRequest.Get(
+                $"https://api.etherscan.io/api?module=account&action=balance" +
+                $"&address={Account}" +
+                $"&tag=latest" +
+                $"&apikey=7VR9XJZM17W2P6NEXEJDPKUHB21FAHDEQ9");
             www.SetRequestHeader("Content-Type", "application/json");
             www.SendWebRequest();
             while (!www.isDone)
@@ -162,12 +156,13 @@ namespace Pixygon.NFT.Eth {
                 www.Dispose();
                 return string.Empty;
             }
-
-            var accountResult = JsonUtility.FromJson<AccountResult>(www.downloadHandler.text);
+            Debug.Log("Eth balance: " + www.downloadHandler.text);
+            var balance = JsonUtility.FromJson<EthBalanceResponse>(www.downloadHandler.text);
             www.Dispose();
-            return accountResult.rows.Length == 0 ? "0" : accountResult.rows[0].balance;
+            //Balance is returned in WEI, must be converted to Eth
+            return (balance.result/1000000000000000000f).ToString();
         }
-        public static async Task<NftAssetObject[]> FetchAllAssetsInWallet(string wallet) {
+        public static async Task<NftTemplateObject[]> FetchAllAssetsInWallet(string wallet) {
             /*
             var allAssets = new List<waxAsset>();
             var page = 1;
@@ -194,5 +189,11 @@ namespace Pixygon.NFT.Eth {
             */
             return null;
         }
+    }
+
+    public class EthBalanceResponse {
+        public int status;
+        public string message;
+        public int result;
     }
 }

@@ -39,7 +39,7 @@ namespace Pixygon.NFT {
         //public Tool RequiredTool => Tool.None;
         public int RequiredToolLevel => 0;
         public Transform Root => _root;
-        public NftAssetObject NFTAsset { get; private set; }
+        public NftTemplateObject NftTemplate { get; private set; }
 
         public float Size;
         public bool IsFurniture { get; private set; }
@@ -49,9 +49,9 @@ namespace Pixygon.NFT {
         public List<NftActionAsset> actions = new List<NftActionAsset>();
 
 
-        public virtual void Initialize(NftAssetObject a, Transform player, float size, bool isFurniture = false,
+        public virtual void Initialize(NftTemplateObject a, Transform player, float size, bool isFurniture = false,
             List<string> actionAssets = null) {
-            NFTAsset = a;
+            NftTemplate = a;
             _player = player;
             IsFurniture = isFurniture;
 
@@ -79,18 +79,18 @@ namespace Pixygon.NFT {
         }
 
 
-        public async virtual void InitializePreview(NftAssetObject a, Transform player, float size) {
+        public async virtual void InitializePreview(NftTemplateObject a, Transform player, float size) {
             _isPreview = true;
             GetComponent<BoxCollider>().enabled = false;
             
-            NFTAsset = a;
+            NftTemplate = a;
             _player = player;
             //if (NFTAsset.Data.nsfw && !SettingsSubsystem.instance.SettingsData.NSFW) {
             //    Destroy(gameObject);
             //    return;
             //}
 
-            switch(NFTAsset.MediaType) {
+            switch(NftTemplate.MediaType) {
                 case NFTType.Image:
                 //if(NFTAsset.Data.nftAction == NFTAction.Randomize) {
                 //    _nft = await AddressableLoader.LoadGameObject(NFTAsset.Data.modelRef, _uiObjectParent);
@@ -101,7 +101,7 @@ namespace Pixygon.NFT {
                         _nft.transform.localRotation = Quaternion.identity;
                         _nft.transform.localScale = Vector3.one;
                         _nft.GetComponent<Image>().color = new Color(.2f, .7f, 1f, .5f);
-                        _nft.GetComponent<Image>().sprite = await NFT.GetImageFromIpfs(NFTAsset.IpfsHashes[0]);
+                        _nft.GetComponent<Image>().sprite = await NFT.GetImageFromIpfs(NftTemplate.IpfsHashes[0]);
                     //_nft = await AddressableLoader.LoadGameObject(NFTAsset.Data.prefabRef, _uiObjectParent);
                     //_nft.transform.localRotation = Quaternion.identity;
                     //_nft.transform.localScale = Vector3.one;
@@ -283,7 +283,7 @@ namespace Pixygon.NFT {
             Size = size;
             if (_nft == null)
                 return;
-            switch (NFTAsset.MediaType) {
+            switch (NftTemplate.MediaType) {
                 case NFTType.Model:
                     //_nft.transform.localScale = Vector3.Lerp(Vector3.one * NFTAsset.Data.minScale,
                     //    Vector3.one * NFTAsset.Data.maxScale, size);
@@ -347,12 +347,12 @@ namespace Pixygon.NFT {
             }
         }
         private async void SetNFTType() {
-            switch (NFTAsset.MediaType) {
+            switch (NftTemplate.MediaType) {
                 case NFTType.Image:
                     _nft = Instantiate(_spriteBase, _uiObjectParent);
                     _nft.transform.localRotation = Quaternion.identity;
                     _nft.transform.localScale = Vector3.one;
-                    _nft.GetComponent<Image>().sprite = await NFT.GetImageFromIpfs(NFTAsset.IpfsHashes[0]);
+                    _nft.GetComponent<Image>().sprite = await NFT.GetImageFromIpfs(NftTemplate.IpfsHashes[0]);
                 break;
                 case NFTType.Model:
                     //_nft = await AddressableLoader.LoadGameObject(NFTAsset.Data.modelRef, _parent);
@@ -396,7 +396,7 @@ namespace Pixygon.NFT {
 
             SetSize(Size);
 
-            if (NFTAsset.MediaType != NFTType.Book)
+            if (NftTemplate.MediaType != NFTType.Book)
                 ResizeColliderAroundChildren();
         }
 
@@ -435,7 +435,7 @@ namespace Pixygon.NFT {
             if (IsFurniture || _isPreview)
                 return;
 
-            if (NFTAsset?.assets[0].mint == 1)
+            if (NftTemplate?.assets[0].mint == 1)
                 _mintPS.Play();
             SetNFTAction();
         }
