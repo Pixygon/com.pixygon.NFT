@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Pixygon.DebugTool;
@@ -188,16 +189,13 @@ namespace Pixygon.NFT.Wax {
                 www.Dispose();
                 return 0f;
             }
-
             var accountResult = JsonUtility.FromJson<AccountResult>(www.downloadHandler.text);
             www.Dispose();
-            if (accountResult.rows.Length == 0)
-                return 0f;
+            if (accountResult.rows.Length == 0) return 0f;
             var s = accountResult.rows[0].balance;
-            Debug.Log("Balance: " + s);
             var trimmedString = s.Remove(s.Length - 4, 4);
-            Debug.Log("Trim: " + trimmedString);
-            float.TryParse(trimmedString, out var f);
+            float.TryParse(trimmedString, NumberStyles.Currency, CultureInfo.InvariantCulture, out var f);
+            Debug.Log("Amount: " + f);
             return f;
         }
         public static async Task<NftTemplateObject[]> FetchAllAssetsInWallet(string wallet) {
