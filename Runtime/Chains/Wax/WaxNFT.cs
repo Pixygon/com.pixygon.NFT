@@ -194,7 +194,9 @@ namespace Pixygon.NFT.Wax {
             if (accountResult.rows.Length == 0)
                 return 0f;
             var s = accountResult.rows[0].balance;
+            Debug.Log("Balance: " + s);
             var trimmedString = s.Remove(s.Length - 4, 4);
+            Debug.Log("Trim: " + trimmedString);
             float.TryParse(trimmedString, out var f);
             return f;
         }
