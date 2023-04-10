@@ -354,9 +354,9 @@ namespace Pixygon.NFT {
                 return 0f;
             }
             Debug.Log(www.downloadHandler.text);
-            var price = JsonUtility.FromJson<CoinGeckoCoinValue[]>(www.downloadHandler.text);
+            var price = JsonUtility.FromJson<CoinGeckoCoinValue>(www.downloadHandler.text);
             www.Dispose();
-            return (float)price[0].current_price;
+            return (float)price.current_price;
         }
 
 
