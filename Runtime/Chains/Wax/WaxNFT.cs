@@ -168,11 +168,11 @@ namespace Pixygon.NFT.Wax {
             www.Dispose();
             return new NftTemplateObject(d);
         }
-        public static async Task<float> GetBalance() {
+        public static async Task<float> GetBalance(string wallet) {
             var data = new PostData {
                 json = true,
                 code = "eosio.token",
-                scope = Account,
+                scope = wallet,
                 table = "accounts",
                 lower_bound = "WAX",
                 upper_bound = "WAX",

@@ -141,10 +141,10 @@ namespace Pixygon.NFT.Eth {
             */
             return null;
         }
-        public static async Task<float> GetBalance() {
+        public static async Task<float> GetBalance(string wallet) {
             var www = UnityWebRequest.Get(
                 $"https://api.etherscan.io/api?module=account&action=balance" +
-                $"&address={Account}" +
+                $"&address={wallet}" +
                 $"&tag=latest" +
                 $"&apikey=7VR9XJZM17W2P6NEXEJDPKUHB21FAHDEQ9");
             www.SetRequestHeader("Content-Type", "application/json");

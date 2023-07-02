@@ -363,13 +363,13 @@ namespace Pixygon.NFT {
         public static async Task<NftTemplateObject> GetTemplate(int template) {
             return await WaxNFT.GetTemplate(template);
         }
-        public static async Task<float> GetBalance(Chain chain) {
+        public static async Task<float> GetBalance(Chain chain, string wallet) {
             switch (chain) {
                 case Chain.Ethereum:
-                    return await EthNFT.GetBalance();
+                    return await EthNFT.GetBalance(wallet);
                     break;
                 case Chain.Wax:
-                    return await WaxNFT.GetBalance();
+                    return await WaxNFT.GetBalance(wallet);
                     break;
                 case Chain.Tezos:
                     break;
