@@ -343,7 +343,11 @@ namespace Pixygon.NFT {
             //https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=wax
             //https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=ethereum
             //https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=tezos
-            var www = UnityWebRequest.Get($"https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids={chain.ToString().ToLower()}");
+            //https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=matic-network
+            string chainName = chain.ToString().ToLower();
+            if (chain == Chain.Polygon)
+                chainName = "matic-network";
+            var www = UnityWebRequest.Get($"https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids={chainName}");
             www.SetRequestHeader("Content-Type", "application/json");
             www.SendWebRequest();
             while (!www.isDone)
