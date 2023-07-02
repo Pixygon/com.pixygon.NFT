@@ -51,6 +51,7 @@ namespace Pixygon.NFT {
         Solana = 16,
         Hive = 17,
         Phantom = 18,
-        Flow = 19
+        Flow = 19,
+        ImmutableX = 20
     }
 }
