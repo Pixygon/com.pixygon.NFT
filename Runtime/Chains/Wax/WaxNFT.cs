@@ -112,11 +112,11 @@ namespace Pixygon.NFT.Wax {
             www.Dispose();
             return a;
         }
-        public static async Task<NftTemplateObject[]> FetchAllAssets(string collectionFilter = "") {
+        public static async Task<NftTemplateObject[]> FetchAllAssets(string collectionFilter = "", string wallet = "") {
             var allAssets = new List<NftTemplateObject>();
             var page = 1;
             var isComplete = false;
-            var url = "assets?owner=" + Account;
+            var url = $"assets?owner={(wallet == "" ? Account : wallet)}";
             if (!string.IsNullOrEmpty(collectionFilter))
                 url += "&collection_whitelist=" + collectionFilter;
             while (!isComplete) {

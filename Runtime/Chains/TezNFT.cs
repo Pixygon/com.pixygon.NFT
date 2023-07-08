@@ -78,7 +78,7 @@ namespace Pixygon.NFT.Tez {
             www.Dispose();
             return a;
         }
-        public static async Task<NftTemplateObject[]> FetchAllAssets(string collectionFilter = "") {
+        public static async Task<NftTemplateObject[]> FetchAllAssets(string collectionFilter = "", string wallet = "") {
             /*
             var allAssets = new List<waxAsset>();
             var page = 1;

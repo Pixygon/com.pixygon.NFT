@@ -25,6 +25,7 @@ namespace Pixygon.NFT {
         }
         */
 
+        /*
         public static async void FetchAllAssetsInWallet(Chain chain, OnFinish finish, string wallet) {
             switch(chain) {
                 case Chain.Wax:
@@ -72,18 +73,19 @@ namespace Pixygon.NFT {
                     break;
             }
         }
-        public static async void FetchAllAssets(Chain chain, OnFinish finish, string collectionFilter = "") {
+        */
+        public static async void FetchAllAssets(Chain chain, OnFinish finish, string collectionFilter = "", string wallet = "") {
             switch(chain) {
                 case Chain.Wax:
-                    finish?.Invoke(await WaxNFT.FetchAllAssets(collectionFilter));
+                    finish?.Invoke(await WaxNFT.FetchAllAssets(collectionFilter, wallet));
                     break;
                 case Chain.EOS:
                     break;
                 case Chain.Ethereum:
-                    finish?.Invoke(await EthNFT.FetchAllAssets(collectionFilter));
+                    finish?.Invoke(await EthNFT.FetchAllAssets(collectionFilter, wallet));
                     break;
                 case Chain.Tezos:
-                    finish?.Invoke(await TezNFT.FetchAllAssets(collectionFilter));
+                    finish?.Invoke(await TezNFT.FetchAllAssets(collectionFilter, wallet));
                     break;
                 case Chain.Polygon:
                     break;
