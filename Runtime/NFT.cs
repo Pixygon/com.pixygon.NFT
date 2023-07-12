@@ -74,10 +74,10 @@ namespace Pixygon.NFT {
             }
         }
         */
-        public static async void FetchAllAssets(Chain chain, OnFinish finish, string collectionFilter = "", string wallet = "") {
+        public static async void FetchAllAssets(Chain chain, OnFinish finish, string collectionFilter = "", string wallet = "", int page = 1, int limit = 250) {
             switch(chain) {
                 case Chain.Wax:
-                    finish?.Invoke(await WaxNFT.FetchAllAssets(collectionFilter, wallet));
+                    finish?.Invoke(await WaxNFT.FetchAllAssets(collectionFilter, wallet, page, limit));
                     break;
                 case Chain.EOS:
                     break;
