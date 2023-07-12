@@ -127,6 +127,7 @@ namespace Pixygon.NFT.Wax {
                     isComplete = true;
                     break;
                 }
+                isComplete = true;
                 var a = GetList(JsonUtility.FromJson<response>(www.downloadHandler.text));
                 allAssets.AddRange(a);
                 www.Dispose();
