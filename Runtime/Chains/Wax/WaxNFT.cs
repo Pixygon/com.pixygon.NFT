@@ -113,7 +113,28 @@ namespace Pixygon.NFT.Wax {
             www.Dispose();
             return a;
         }
+
         public static async Task<NftTemplateObject[]> FetchAllAssets(string collectionFilter = "", string wallet = "", int page = 1, int limit = 250) {
+            var url = $"assets?owner={(wallet == "" ? Account : wallet)}";
+            if (!string.IsNullOrEmpty(collectionFilter))
+                url += "&collection_whitelist=" + collectionFilter;
+            var www = await GetRequest(url, page, limit);
+            var r = JsonUtility.FromJson<response>(www.downloadHandler.text);
+            if (r.success == false || r.data.Length == 0) {
+                Debug.Log("Something wrong, i guess?");
+                //break;
+            }
+            var wax = JsonUtility.FromJson<response>(www.downloadHandler.text).data.Select(data => new NftTemplateObject(data) {
+                assets = new AssetData[] {
+                    new(data.asset_id, data.owner, data.template_mint, data.template.issued_supply,
+                        data.template.max_supply)
+                }
+            });
+            www.Dispose();
+            return wax.ToArray();
+        }
+
+        public static async Task<NftTemplateObject[]> FetchAllTemplates(string collectionFilter = "", string wallet = "", int page = 1, int limit = 250) {
             var allAssets = new List<NftTemplateObject>();
             var isComplete = false;
             var url = $"assets?owner={(wallet == "" ? Account : wallet)}";
@@ -132,9 +153,9 @@ namespace Pixygon.NFT.Wax {
                 allAssets.AddRange(a);
                 www.Dispose();
             }
-
             return allAssets.ToArray();
         }
+        
         /// <summary>
         /// Returns true if the account owns the template, and invokes success or failed actions, if supplied
         /// </summary>
