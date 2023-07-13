@@ -62,7 +62,6 @@ namespace Pixygon.NFT.Wax {
             var maxTries = _nodes.nodeEndpoints.Length;
             while (retry < maxTries) {
                 var endPoint = _nodes.GetEndpoint;
-                Debug.Log("Getting NFT assets: " + page + "/" + limit);
                 var www = UnityWebRequest.Get($"https://{endPoint}/atomicassets/v1/{url}&page={page}&limit={limit}");
                 www.timeout = 60;
                 www.SendWebRequest();
