@@ -2,9 +2,9 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using Pixygon.DebugTool;
 using Pixygon.Saving;
-using Unity.Plastic.Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.Networking;
 
