@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using Pixygon.PagedContent;
 using Pixygon.NFT.Wax;
+using UnityEngine;
 
 namespace Pixygon.NFT {
     public class NftAssetContainer : PagedContentDataObject {
@@ -33,6 +34,7 @@ namespace Pixygon.NFT {
             Description = a.data.Description;
             CollectionName = a.collection.collection_name;
             Chain = Chain.Wax;
+            Debug.Log(a.immutable_data);
         }
     }
 

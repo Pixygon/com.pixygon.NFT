@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Pixygon.NFT.Wax {
     
@@ -48,6 +49,7 @@ namespace Pixygon.NFT.Wax {
         public string asset_id;
         public string owner;
         public string name;
+        public string template_id;
         public bool is_transferable;
         public bool is_burnable;
         public collection collection;
@@ -55,7 +57,7 @@ namespace Pixygon.NFT.Wax {
         public template template;
         //public backed_tokens[] backed_tokens;
         public mutable_data mutable_data;
-        public immutable_data immutable_data;
+        public Dictionary<string, string> immutable_data;
         public int template_mint;
 
         public string burned_by_account;
@@ -75,9 +77,6 @@ namespace Pixygon.NFT.Wax {
         }
     }
     [Serializable]
-    public class immutable_data {
-    }
-    [Serializable]
     public class mutable_data {
 
     }
@@ -95,6 +94,8 @@ namespace Pixygon.NFT.Wax {
     {
         public string collection_name;
         public string name;
+        public string img;
+        public string images;
         public string author;
         public bool allow_notify;
         public string[] authorized_accounts;
@@ -107,17 +108,9 @@ namespace Pixygon.NFT.Wax {
     public class schema
     {
         public string schema_name;
-        
-        /*
-        "format": [
-          {
-            "name": "string",
-            "type": "string"
-          }
-        ],
-        "created_at_block": "string",
-        "created_at_time": "string"
-        */
+        public format[] format;
+        public string created_at_block;
+        public string created_at_time;
     }
     [Serializable]
     public class template
@@ -128,7 +121,7 @@ namespace Pixygon.NFT.Wax {
         public bool is_burnable;
         public int issued_supply;
         public mutable_data mutable_data;
-        public immutable_data immutable_data;
+        public Dictionary<string, string> immutable_data;
         public string created_at_time;
         public string created_at_block;
     }
@@ -140,5 +133,11 @@ namespace Pixygon.NFT.Wax {
           "token_precision": 0,
           "amount": "string"
         */
+    }
+
+    [Serializable]
+    public class format {
+        public string name;
+        public string type;
     }
 }
