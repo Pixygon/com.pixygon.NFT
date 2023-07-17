@@ -139,12 +139,23 @@ namespace Pixygon.NFT.Wax {
             Debug.Log("Templates: " + www.downloadHandler.text);
             var r = JsonConvert.DeserializeObject<response>(www.downloadHandler.text);
             if (r.success == false || r.data.Length == 0) Debug.Log("Something wrong, i guess?");
+            var wax = new List<NftTemplateObject>();
+            foreach (var data in r.data) {
+                var d = new NftTemplateObject(data);
+                d.assets = new AssetData[] {
+                    new(data.asset_id, data.owner, data.template_mint, data.template.issued_supply,
+                        data.template.max_supply)
+                };
+                wax.Add(d);
+            }
+            /*
             var wax = r.data.Select(data => new NftTemplateObject(data) {
                 assets = new AssetData[] {
                     new(data.asset_id, data.owner, data.template_mint, data.template.issued_supply,
                         data.template.max_supply)
                 }
             });
+            */
             www.Dispose();
             return wax.ToArray();
         }
