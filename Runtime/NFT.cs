@@ -109,6 +109,53 @@ namespace Pixygon.NFT {
                     break;
             }
         }
+        public static async void FetchAllCollectionTemplates(Chain chain, OnFinish finish, string collectionFilter, int page = 1, int limit = 250) {
+            switch(chain) {
+                case Chain.Wax:
+                    finish?.Invoke(await WaxNFT.FetchAllCollectionTemplates(collectionFilter, page, limit));
+                    break;
+                case Chain.EOS:
+                    break;
+                case Chain.Ethereum:
+                    //finish?.Invoke(await EthNFT.FetchAllTemplates(collectionFilter, wallet));
+                    break;
+                case Chain.Tezos:
+                    //finish?.Invoke(await TezNFT.FetchAllTemplates(collectionFilter, wallet));
+                    break;
+                case Chain.Polygon:
+                    break;
+                case Chain.Polkadot:
+                    break;
+                case Chain.Elrond:
+                    break;
+                case Chain.BinanceChain:
+                    break;
+                case Chain.Cardano:
+                    break;
+                case Chain.Stellar:
+                    break;
+                case Chain.Neo:
+                    break;
+                case Chain.HyperledgerFabric:
+                    break;
+                case Chain.Waves:
+                    break;
+                case Chain.Cosmos:
+                    break;
+                case Chain.Ripple:
+                    break;
+                case Chain.Nem:
+                    break;
+                case Chain.Solana:
+                    break;
+                case Chain.Hive:
+                    break;
+                case Chain.Phantom:
+                    break;
+                case Chain.Flow:
+                    break;
+            }
+        }
 
         
         
