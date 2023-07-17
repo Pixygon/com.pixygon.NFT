@@ -142,10 +142,12 @@ namespace Pixygon.NFT.Wax {
             var wax = new List<NftTemplateObject>();
             foreach (var data in r.data) {
                 var d = new NftTemplateObject(data);
+                /*
                 d.assets = new AssetData[] {
                     new(data.asset_id, data.owner, data.template_mint, data.template.issued_supply,
                         data.template.max_supply)
                 };
+                */
                 wax.Add(d);
             }
             /*
