@@ -9,6 +9,7 @@ using UnityEngine.Networking;
 namespace Pixygon.NFT {
     public class NFT : MonoBehaviour {
         public delegate void OnFinish(NftTemplateObject[] assets);
+        public delegate void OnFinishCollection(collection collection);
         public delegate void OnSuccess();
         public delegate void OnSuccessString(string s);
         public delegate void OnFail();
@@ -156,7 +157,7 @@ namespace Pixygon.NFT {
                     break;
             }
         }
-        public static async void GetCollection(Chain chain, OnFinish finish, string collection) {
+        public static async void GetCollection(Chain chain, OnFinishCollection finish, string collection) {
             switch(chain) {
                 case Chain.Wax:
                     finish?.Invoke(await WaxNFT.GetCollection(collection));
