@@ -466,7 +466,7 @@ namespace Pixygon.NFT {
     {
         public bool success;
         public waxAssetData[] data;
-        public int query_time;
+        public long query_time;
     }
     [Serializable]
     public class ErrorResponse
