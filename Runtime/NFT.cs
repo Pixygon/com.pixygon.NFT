@@ -15,65 +15,6 @@ namespace Pixygon.NFT {
         public delegate void OnBalanceGet(string s);
 
         private static string _account = string.Empty;
-
-        /*
-        private static string Account { get {
-                if(_account == string.Empty)
-                    _account = PlayerPrefs.GetString("WaxWallet");
-                return _account;
-            }
-        }
-        */
-
-        /*
-        public static async void FetchAllAssetsInWallet(Chain chain, OnFinish finish, string wallet) {
-            switch(chain) {
-                case Chain.Wax:
-                    finish?.Invoke(await WaxNFT.FetchAllAssetsInWallet(wallet));
-                    break;
-                case Chain.EOS:
-                    break;
-                case Chain.Ethereum:
-                    finish?.Invoke(await EthNFT.FetchAllAssetsInWallet(wallet));
-                    break;
-                case Chain.Tezos:
-                    finish?.Invoke(await TezNFT.FetchAllAssetsInWallet(wallet));
-                    break;
-                case Chain.Polygon:
-                    break;
-                case Chain.Polkadot:
-                    break;
-                case Chain.Elrond:
-                    break;
-                case Chain.BinanceChain:
-                    break;
-                case Chain.Cardano:
-                    break;
-                case Chain.Stellar:
-                    break;
-                case Chain.Neo:
-                    break;
-                case Chain.HyperledgerFabric:
-                    break;
-                case Chain.Waves:
-                    break;
-                case Chain.Cosmos:
-                    break;
-                case Chain.Ripple:
-                    break;
-                case Chain.Nem:
-                    break;
-                case Chain.Solana:
-                    break;
-                case Chain.Hive:
-                    break;
-                case Chain.Phantom:
-                    break;
-                case Chain.Flow:
-                    break;
-            }
-        }
-        */
         public static async void FetchAllAssets(Chain chain, OnFinish finish, string collectionFilter = "", string wallet = "", int page = 1, int limit = 250) {
             switch(chain) {
                 case Chain.Wax:
@@ -121,6 +62,54 @@ namespace Pixygon.NFT {
                     break;
             }
         }
+        public static async void FetchAllTemplates(Chain chain, OnFinish finish, string collectionFilter = "", string wallet = "", int page = 1, int limit = 250) {
+            switch(chain) {
+                case Chain.Wax:
+                    finish?.Invoke(await WaxNFT.FetchAllTemplates(collectionFilter, wallet, page, limit));
+                    break;
+                case Chain.EOS:
+                    break;
+                case Chain.Ethereum:
+                    //finish?.Invoke(await EthNFT.FetchAllTemplates(collectionFilter, wallet));
+                    break;
+                case Chain.Tezos:
+                    //finish?.Invoke(await TezNFT.FetchAllTemplates(collectionFilter, wallet));
+                    break;
+                case Chain.Polygon:
+                    break;
+                case Chain.Polkadot:
+                    break;
+                case Chain.Elrond:
+                    break;
+                case Chain.BinanceChain:
+                    break;
+                case Chain.Cardano:
+                    break;
+                case Chain.Stellar:
+                    break;
+                case Chain.Neo:
+                    break;
+                case Chain.HyperledgerFabric:
+                    break;
+                case Chain.Waves:
+                    break;
+                case Chain.Cosmos:
+                    break;
+                case Chain.Ripple:
+                    break;
+                case Chain.Nem:
+                    break;
+                case Chain.Solana:
+                    break;
+                case Chain.Hive:
+                    break;
+                case Chain.Phantom:
+                    break;
+                case Chain.Flow:
+                    break;
+            }
+        }
+
         
         
         /// <summary>
