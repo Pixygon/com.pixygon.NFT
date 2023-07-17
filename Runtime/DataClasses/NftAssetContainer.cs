@@ -38,7 +38,7 @@ namespace Pixygon.NFT {
                 var ipfs = new List<string>();
                 foreach (var pair in a.immutable_data) {
                     Debug.Log(pair.Key + ": " + pair.Value);
-                    if (pair.Key.ToLower() == "video" || pair.Key.ToLower() == "image" ) {
+                    if (pair.Key.ToLower() == "video" || pair.Key.ToLower() == "image"  || pair.Key.ToLower() == "img") {
                         ipfs.Add(pair.Value);
                     }
                 }
