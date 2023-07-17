@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Collections.Generic;
+using System.Text;
 using Pixygon.PagedContent;
 using Pixygon.NFT.Wax;
 using UnityEngine;
@@ -34,8 +35,14 @@ namespace Pixygon.NFT {
                 IpfsHashes = !string.IsNullOrWhiteSpace(a.data.video) ? new[] { a.data.video } : new[] { a.data.img };
                 Description = a.data.Description;
             } else {
-                Debug.Log("Immutable Assets: " + a.immutable_data);
-                //IpfsHashes = !string.IsNullOrWhiteSpace(a.immutable_data.ContainsKey("image")) ? new[] { a.data.video } : new[] { a.data.img };
+                var ipfs = new List<string>();
+                foreach (var pair in a.immutable_data) {
+                    Debug.Log(pair.Key + ": " + pair.Value);
+                    if (pair.Key.ToLower() == "video" || pair.Key.ToLower() == "image" ) {
+                        ipfs.Add(pair.Value);
+                    }
+                }
+                IpfsHashes = ipfs.ToArray();
             }
             CollectionName = a.collection.collection_name;
             Chain = Chain.Wax;
