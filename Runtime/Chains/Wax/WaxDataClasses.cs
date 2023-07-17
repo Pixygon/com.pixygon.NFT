@@ -94,9 +94,21 @@ namespace Pixygon.NFT.Wax {
         public string[] authorized_accounts;
         public string[] notify_accounts;
         public float market_fee;
+        public collectionData data;
         public string created_at_block;
         public string created_at_time;
     }
+
+    [Serializable]
+    public class collectionData {
+        public string img;
+        public string url;
+        public string name;
+        public string images;
+        public string socials;
+        public string description;
+    }
+
     [Serializable]
     public class schema
     {
