@@ -49,7 +49,7 @@ namespace Pixygon.NFT.Wax {
         public string asset_id;
         public string owner;
         public string name;
-        public string template_id;
+        public int template_id;
         public bool is_transferable;
         public bool is_burnable;
         public collection collection;

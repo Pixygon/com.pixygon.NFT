@@ -28,7 +28,7 @@ namespace Pixygon.NFT {
         }
         public NftTemplateObject(waxAssetData a) {
             Title = a.name;
-            TemplateInfo = new NFTTemplateInfo(a.template.template_id, a.schema.schema_name,
+            TemplateInfo = new NFTTemplateInfo((a.template == null ? a.template_id : a.template.template_id), a.schema.schema_name,
                 a.collection.collection_name, Chain.Wax);
             IpfsHashes = !string.IsNullOrWhiteSpace(a.data.video) ? new[] { a.data.video } : new[] { a.data.img };
             Description = a.data.Description;
