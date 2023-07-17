@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Pixygon.DebugTool;
 using Pixygon.Saving;
+using Unity.Plastic.Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -136,9 +137,9 @@ namespace Pixygon.NFT.Wax {
             var url = $"templates?collection_name={collectionFilter}";
             var www = await GetRequest(url, page, limit);
             Debug.Log("Templates: " + www.downloadHandler.text);
-            var r = JsonUtility.FromJson<response>(www.downloadHandler.text);
+            var r = JsonConvert.DeserializeObject<response>(www.downloadHandler.text);
             if (r.success == false || r.data.Length == 0) Debug.Log("Something wrong, i guess?");
-            var wax = JsonUtility.FromJson<response>(www.downloadHandler.text).data.Select(data => new NftTemplateObject(data) {
+            var wax = r.data.Select(data => new NftTemplateObject(data) {
                 assets = new AssetData[] {
                     new(data.asset_id, data.owner, data.template_mint, data.template.issued_supply,
                         data.template.max_supply)

@@ -34,7 +34,7 @@ namespace Pixygon.NFT {
             Description = a.data.Description;
             CollectionName = a.collection.collection_name;
             Chain = Chain.Wax;
-            Debug.Log(a.immutable_data);
+            Debug.Log("Immutable Assets: " + a.immutable_data);
         }
     }
 
