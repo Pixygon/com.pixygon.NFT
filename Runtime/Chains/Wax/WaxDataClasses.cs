@@ -83,12 +83,11 @@ namespace Pixygon.NFT.Wax {
         public string Description;
     }
     [Serializable]
-    public class collection
-    {
+    public class collection {
+        public string contract;
         public string collection_name;
         public string name;
         public string img;
-        public string images;
         public string author;
         public bool allow_notify;
         public string[] authorized_accounts;
