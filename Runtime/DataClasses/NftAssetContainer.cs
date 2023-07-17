@@ -30,11 +30,15 @@ namespace Pixygon.NFT {
             Title = a.name;
             TemplateInfo = new NFTTemplateInfo((a.template == null ? a.template_id : a.template.template_id), a.schema.schema_name,
                 a.collection.collection_name, Chain.Wax);
-            IpfsHashes = !string.IsNullOrWhiteSpace(a.data.video) ? new[] { a.data.video } : new[] { a.data.img };
-            Description = a.data.Description;
+            if (a.data != null) {
+                IpfsHashes = !string.IsNullOrWhiteSpace(a.data.video) ? new[] { a.data.video } : new[] { a.data.img };
+                Description = a.data.Description;
+            } else {
+                Debug.Log("Immutable Assets: " + a.immutable_data);
+                //IpfsHashes = !string.IsNullOrWhiteSpace(a.immutable_data.ContainsKey("image")) ? new[] { a.data.video } : new[] { a.data.img };
+            }
             CollectionName = a.collection.collection_name;
             Chain = Chain.Wax;
-            Debug.Log("Immutable Assets: " + a.immutable_data);
         }
     }
 
