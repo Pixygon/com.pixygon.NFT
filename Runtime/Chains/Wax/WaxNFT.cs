@@ -133,23 +133,19 @@ namespace Pixygon.NFT.Wax {
             return wax.ToArray();
         }
         public static async Task<NftTemplateObject[]> FetchAllCollectionTemplates(string collectionFilter = "", int page = 1, int limit = 250) {
-            var allAssets = new List<NftTemplateObject>();
-            var isComplete = false;
             var url = $"templates?collection_name={collectionFilter}";
-            while (!isComplete) {
-                var www = await GetRequest(url, page, limit);
-                page++;
-                var r = JsonUtility.FromJson<response>(www.downloadHandler.text);
-                if (r.success == false || r.data.Length == 0) {
-                    isComplete = true;
-                    break;
+            var www = await GetRequest(url, page, limit);
+            Debug.Log("Templates: " + www.downloadHandler.text);
+            var r = JsonUtility.FromJson<response>(www.downloadHandler.text);
+            if (r.success == false || r.data.Length == 0) Debug.Log("Something wrong, i guess?");
+            var wax = JsonUtility.FromJson<response>(www.downloadHandler.text).data.Select(data => new NftTemplateObject(data) {
+                assets = new AssetData[] {
+                    new(data.asset_id, data.owner, data.template_mint, data.template.issued_supply,
+                        data.template.max_supply)
                 }
-                isComplete = true;
-                var a = GetList(JsonUtility.FromJson<response>(www.downloadHandler.text));
-                allAssets.AddRange(a);
-                www.Dispose();
-            }
-            return allAssets.ToArray();
+            });
+            www.Dispose();
+            return wax.ToArray();
         }
         public static async Task<NftTemplateObject[]> FetchAllTemplates(string collectionFilter = "", string wallet = "", int page = 1, int limit = 250) {
             var allAssets = new List<NftTemplateObject>();
