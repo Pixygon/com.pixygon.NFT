@@ -100,7 +100,7 @@ namespace Pixygon.NFT.Wax {
         public bool allow_notify;
         public string[] authorized_accounts;
         public string[] notify_accounts;
-        public int market_fee;
+        public float market_fee;
         public string created_at_block;
         public string created_at_time;
     }
