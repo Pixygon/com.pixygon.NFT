@@ -156,6 +156,53 @@ namespace Pixygon.NFT {
                     break;
             }
         }
+        public static async void GetCollection(Chain chain, OnFinish finish, string collection) {
+            switch(chain) {
+                case Chain.Wax:
+                    finish?.Invoke(await WaxNFT.GetCollection(collection));
+                    break;
+                case Chain.EOS:
+                    break;
+                case Chain.Ethereum:
+                    //finish?.Invoke(await EthNFT.GetCollection(collection));
+                    break;
+                case Chain.Tezos:
+                    //finish?.Invoke(await TezNFT.GetCollection(collection));
+                    break;
+                case Chain.Polygon:
+                    break;
+                case Chain.Polkadot:
+                    break;
+                case Chain.Elrond:
+                    break;
+                case Chain.BinanceChain:
+                    break;
+                case Chain.Cardano:
+                    break;
+                case Chain.Stellar:
+                    break;
+                case Chain.Neo:
+                    break;
+                case Chain.HyperledgerFabric:
+                    break;
+                case Chain.Waves:
+                    break;
+                case Chain.Cosmos:
+                    break;
+                case Chain.Ripple:
+                    break;
+                case Chain.Nem:
+                    break;
+                case Chain.Solana:
+                    break;
+                case Chain.Hive:
+                    break;
+                case Chain.Phantom:
+                    break;
+                case Chain.Flow:
+                    break;
+            }
+        }
 
         
         
@@ -462,10 +509,15 @@ namespace Pixygon.NFT {
         }
     }
     [Serializable]
-    public class response
-    {
+    public class response {
         public bool success;
         public waxAssetData[] data;
+        public long query_time;
+    }
+    [Serializable]
+    public class collectionResponse {
+        public bool success;
+        public collection data;
         public long query_time;
     }
     [Serializable]

@@ -43,8 +43,7 @@ namespace Pixygon.NFT.Wax {
     }
     */
     [Serializable]
-    public class waxAssetData
-    {
+    public class waxAssetData {
         public string contract;
         public string asset_id;
         public string owner;
@@ -56,7 +55,7 @@ namespace Pixygon.NFT.Wax {
         public schema schema;
         public template template;
         //public backed_tokens[] backed_tokens;
-        public mutable_data mutable_data;
+        public Dictionary<string, string> mutable_data;
         public Dictionary<string, string> immutable_data;
         public int template_mint;
 
@@ -71,16 +70,10 @@ namespace Pixygon.NFT.Wax {
         //public string minted_at_time;
         public nftdata data;
         public override string ToString() {
-            return string.Format(
-                "Contract: {0}\nAssetID: {1}\nOwner: {2}\nName: {3}\nTemplate: {4}",
-                contract, asset_id, owner, name, template.template_id);
+            return
+                $"Contract: {contract}\nAssetID: {asset_id}\nOwner: {owner}\nName: {name}\nTemplate: {template.template_id}";
         }
     }
-    [Serializable]
-    public class mutable_data {
-
-    }
-
     [Serializable]
     public class nftdata {
         public string img;
@@ -120,7 +113,7 @@ namespace Pixygon.NFT.Wax {
         public bool is_transferable;
         public bool is_burnable;
         public int issued_supply;
-        public mutable_data mutable_data;
+        public Dictionary<string, string> mutable_data;
         public Dictionary<string, string> immutable_data;
         public string created_at_time;
         public string created_at_block;

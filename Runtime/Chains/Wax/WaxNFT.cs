@@ -63,7 +63,10 @@ namespace Pixygon.NFT.Wax {
             var maxTries = _nodes.nodeEndpoints.Length;
             while (retry < maxTries) {
                 var endPoint = _nodes.GetEndpoint;
-                var www = UnityWebRequest.Get($"https://{endPoint}/atomicassets/v1/{url}&page={page}&limit={limit}");
+                var urlString = $"https://{endPoint}/atomicassets/v1/{url}";
+                if(page != -1)
+                    urlString += $"&page={page}&limit={limit}";
+                var www = UnityWebRequest.Get(urlString);
                 www.timeout = 60;
                 www.SendWebRequest();
                 while (!www.isDone) await Task.Yield();
@@ -113,7 +116,6 @@ namespace Pixygon.NFT.Wax {
             www.Dispose();
             return a;
         }
-
         public static async Task<NftTemplateObject[]> FetchAllAssets(string collectionFilter = "", string wallet = "", int page = 1, int limit = 250) {
             var url = $"assets?owner={(wallet == "" ? Account : wallet)}";
             if (!string.IsNullOrEmpty(collectionFilter))
@@ -150,16 +152,16 @@ namespace Pixygon.NFT.Wax {
                 */
                 wax.Add(d);
             }
-            /*
-            var wax = r.data.Select(data => new NftTemplateObject(data) {
-                assets = new AssetData[] {
-                    new(data.asset_id, data.owner, data.template_mint, data.template.issued_supply,
-                        data.template.max_supply)
-                }
-            });
-            */
             www.Dispose();
             return wax.ToArray();
+        }
+        public static async Task<collection> GetCollection(string collectionFilter = "") {
+            var url = $"collections/{collectionFilter}";
+            var www = await GetRequest(url, -1);
+            Debug.Log("collection: " + www.downloadHandler.text);
+            var r = JsonConvert.DeserializeObject<collectionResponse>(www.downloadHandler.text);
+            www.Dispose();
+            return  r.data;
         }
         public static async Task<NftTemplateObject[]> FetchAllTemplates(string collectionFilter = "", string wallet = "", int page = 1, int limit = 250) {
             var allAssets = new List<NftTemplateObject>();
