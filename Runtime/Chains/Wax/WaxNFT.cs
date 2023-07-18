@@ -163,6 +163,8 @@ namespace Pixygon.NFT.Wax {
             www.Dispose();
             return  r.data;
         }
+        
+        //GET COLLECTION STATS: https://wax.api.atomicassets.io/atomicmarket/v1/stats/accounts?symbol=WAX&collection_name=pixygon&page=1&limit=100&order=desc&sort=buy_volume
         public static async Task<NftTemplateObject[]> FetchAllTemplates(string collectionFilter = "", string wallet = "", int page = 1, int limit = 250) {
             var allAssets = new List<NftTemplateObject>();
             var isComplete = false;
