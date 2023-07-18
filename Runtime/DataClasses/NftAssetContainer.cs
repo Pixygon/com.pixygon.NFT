@@ -32,11 +32,11 @@ namespace Pixygon.NFT {
             TemplateInfo = new NFTTemplateInfo((a.template == null ? a.template_id : a.template.template_id), a.schema.schema_name,
                 a.collection.collection_name, Chain.Wax);
             if (a.data != null) {
-                IpfsHashes = !string.IsNullOrWhiteSpace(a.data.video) ? new[] { a.data.video } : new[] { a.data.img };
+                IpfsHashes = !string.IsNullOrEmpty(a.data.video) ? new[] { a.data.video } : new[] { a.data.img };
                 Description = a.data.Description;
             }
             IpfsHashes ??= GetIpfsHashes(a.immutable_data);
-            if (string.IsNullOrWhiteSpace(Description))
+            if (string.IsNullOrEmpty(Description))
                 Description = GetDescription(a.immutable_data);
             CollectionName = a.collection.collection_name;
             Chain = Chain.Wax;
@@ -51,7 +51,6 @@ namespace Pixygon.NFT {
                     desc = pair.Value;
                 }
             }
-
             return desc;
         }
 
