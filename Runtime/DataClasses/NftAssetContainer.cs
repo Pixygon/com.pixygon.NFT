@@ -35,7 +35,6 @@ namespace Pixygon.NFT {
                 IpfsHashes = !string.IsNullOrEmpty(a.data.video) ? new[] { a.data.video } : new[] { a.data.img };
                 Description = a.data.Description;
             }
-            Debug.Log("Asset: " + JsonUtility.ToJson(a));
             IpfsHashes ??= GetIpfsHashes(a.immutable_data);
             if (string.IsNullOrEmpty(Description))
                 Description = GetDescription(a.immutable_data);
@@ -44,13 +43,11 @@ namespace Pixygon.NFT {
         }
 
         private string GetDescription(Dictionary<string, string> data) {
-            Debug.Log("Get desc! 0");
             if (data == null) return "";
-            Debug.Log("Get desc! 1");
             var desc = "";
             foreach (var pair in data) {
                 Debug.Log("Get Desc: " + pair.Key + ": " + pair.Value);
-                if (pair.Key.ToLower() == "description" || pair.Key.ToLower() == "desc") {
+                if (pair.Key.ToLower() == "description" || pair.Key.ToLower() == "desc" || pair.Key.ToLower() == "info") {
                     desc = pair.Value;
                 }
             }
