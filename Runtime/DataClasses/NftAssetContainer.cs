@@ -43,6 +43,7 @@ namespace Pixygon.NFT {
         }
 
         private string GetDescription(Dictionary<string, string> data) {
+            if (data == null) return "";
             var desc = "";
             foreach (var pair in data) {
                 Debug.Log(pair.Key + ": " + pair.Value);
@@ -55,6 +56,7 @@ namespace Pixygon.NFT {
         }
 
         private string[] GetIpfsHashes(Dictionary<string, string> data) {
+            if (data == null) return null;
             var ipfs = new List<string>();
             foreach (var pair in data) {
                 Debug.Log(pair.Key + ": " + pair.Value);
