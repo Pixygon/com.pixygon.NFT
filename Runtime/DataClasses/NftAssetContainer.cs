@@ -30,8 +30,7 @@ namespace Pixygon.NFT {
         }
         public NftTemplateObject(waxAssetData a) {
             Title = a.name;
-            TemplateInfo = new NFTTemplateInfo((a.template == null ? a.template_id : a.template.template_id), a.schema.schema_name,
-                a.collection.collection_name, Chain.Wax);
+            TemplateInfo = new NFTTemplateInfo(a.template == null ? a.template_id : a.template.template_id, a.schema.schema_name, a.collection.collection_name);
             if (a.data != null) {
                 IpfsHashes = !string.IsNullOrEmpty(a.data.video) ? new[] { a.data.video } : new[] { a.data.img };
                 Description = a.data.Description;
@@ -53,9 +52,4 @@ namespace Pixygon.NFT {
             return data == null ? null : (from pair in data where pair.Key.ToLower() == "video" || pair.Key.ToLower() == "image" || pair.Key.ToLower() == "img" select pair.Value).ToArray();
         }
     }
-
-    //public class NftAssetObject {
-    //    public string AssetId;
-    //    public int Mint;
-    //}
 }
