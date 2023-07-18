@@ -35,6 +35,7 @@ namespace Pixygon.NFT {
                 IpfsHashes = !string.IsNullOrEmpty(a.data.video) ? new[] { a.data.video } : new[] { a.data.img };
                 Description = a.data.Description;
             }
+            Debug.Log("Asset: " + JsonUtility.ToJson(a));
             IpfsHashes ??= GetIpfsHashes(a.immutable_data);
             if (string.IsNullOrEmpty(Description))
                 Description = GetDescription(a.immutable_data);
