@@ -126,7 +126,7 @@ namespace Pixygon.NFT.Wax {
                 Debug.Log("Something wrong, i guess?");
                 //break;
             }
-            var wax = JsonUtility.FromJson<response>(www.downloadHandler.text).data.Select(data => new NftTemplateObject(data) {
+            var wax = JsonConvert.DeserializeObject<response>(www.downloadHandler.text).data.Select(data => new NftTemplateObject(data) {
                 assets = new AssetData[] {
                     new(data.asset_id, data.owner, data.template_mint, data.template.issued_supply,
                         data.template.max_supply)
@@ -144,12 +144,6 @@ namespace Pixygon.NFT.Wax {
             var wax = new List<NftTemplateObject>();
             foreach (var data in r.data) {
                 var d = new NftTemplateObject(data);
-                /*
-                d.assets = new AssetData[] {
-                    new(data.asset_id, data.owner, data.template_mint, data.template.issued_supply,
-                        data.template.max_supply)
-                };
-                */
                 wax.Add(d);
             }
             www.Dispose();
