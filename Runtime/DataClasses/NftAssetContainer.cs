@@ -43,14 +43,17 @@ namespace Pixygon.NFT {
         }
 
         private string GetDescription(Dictionary<string, string> data) {
+            Debug.Log("Get desc! 0");
             if (data == null) return "";
+            Debug.Log("Get desc! 1");
             var desc = "";
             foreach (var pair in data) {
-                Debug.Log(pair.Key + ": " + pair.Value);
+                Debug.Log("Get Desc: " + pair.Key + ": " + pair.Value);
                 if (pair.Key.ToLower() == "description" || pair.Key.ToLower() == "desc") {
                     desc = pair.Value;
                 }
             }
+            Debug.Log("Get desc! 2");
             return desc;
         }
 
