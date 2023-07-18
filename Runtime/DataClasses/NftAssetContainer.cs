@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Pixygon.PagedContent;
 using Pixygon.NFT.Wax;
@@ -42,29 +43,14 @@ namespace Pixygon.NFT {
             Chain = Chain.Wax;
         }
 
-        private string GetDescription(Dictionary<string, string> data) {
+        private static string GetDescription(Dictionary<string, string> data) {
             if (data == null) return "";
-            var desc = "";
-            foreach (var pair in data) {
-                Debug.Log("Get Desc: " + pair.Key + ": " + pair.Value);
-                if (pair.Key.ToLower() == "description" || pair.Key.ToLower() == "desc" || pair.Key.ToLower() == "info") {
-                    desc = pair.Value;
-                }
-            }
-            Debug.Log("Get desc! 2");
-            return desc;
+            foreach (var pair in data.Where(pair => pair.Key.ToLower() == "description" || pair.Key.ToLower() == "desc" || pair.Key.ToLower() == "info"))
+                return pair.Value;
+            return "";
         }
-
-        private string[] GetIpfsHashes(Dictionary<string, string> data) {
-            if (data == null) return null;
-            var ipfs = new List<string>();
-            foreach (var pair in data) {
-                Debug.Log(pair.Key + ": " + pair.Value);
-                if (pair.Key.ToLower() == "video" || pair.Key.ToLower() == "image"  || pair.Key.ToLower() == "img") {
-                    ipfs.Add(pair.Value);
-                }
-            }
-            return ipfs.ToArray();
+        private static string[] GetIpfsHashes(Dictionary<string, string> data) {
+            return data == null ? null : (from pair in data where pair.Key.ToLower() == "video" || pair.Key.ToLower() == "image" || pair.Key.ToLower() == "img" select pair.Value).ToArray();
         }
     }
 
