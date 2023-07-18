@@ -34,18 +34,35 @@ namespace Pixygon.NFT {
             if (a.data != null) {
                 IpfsHashes = !string.IsNullOrWhiteSpace(a.data.video) ? new[] { a.data.video } : new[] { a.data.img };
                 Description = a.data.Description;
-            } else {
-                var ipfs = new List<string>();
-                foreach (var pair in a.immutable_data) {
-                    Debug.Log(pair.Key + ": " + pair.Value);
-                    if (pair.Key.ToLower() == "video" || pair.Key.ToLower() == "image"  || pair.Key.ToLower() == "img") {
-                        ipfs.Add(pair.Value);
-                    }
-                }
-                IpfsHashes = ipfs.ToArray();
             }
+            IpfsHashes ??= GetIpfsHashes(a.immutable_data);
+            if (string.IsNullOrWhiteSpace(Description))
+                Description = GetDescription(a.immutable_data);
             CollectionName = a.collection.collection_name;
             Chain = Chain.Wax;
+        }
+
+        private string GetDescription(Dictionary<string, string> data) {
+            var desc = "";
+            foreach (var pair in data) {
+                Debug.Log(pair.Key + ": " + pair.Value);
+                if (pair.Key.ToLower() == "description" || pair.Key.ToLower() == "desc") {
+                    desc = pair.Value;
+                }
+            }
+
+            return desc;
+        }
+
+        private string[] GetIpfsHashes(Dictionary<string, string> data) {
+            var ipfs = new List<string>();
+            foreach (var pair in data) {
+                Debug.Log(pair.Key + ": " + pair.Value);
+                if (pair.Key.ToLower() == "video" || pair.Key.ToLower() == "image"  || pair.Key.ToLower() == "img") {
+                    ipfs.Add(pair.Value);
+                }
+            }
+            return ipfs.ToArray();
         }
     }
 
