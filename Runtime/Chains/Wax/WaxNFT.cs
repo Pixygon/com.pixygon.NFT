@@ -112,7 +112,7 @@ namespace Pixygon.NFT.Wax {
             if (info.template != -1)
                 url += "&template_id=" + info.template;
             var www = await GetRequest(url);
-            var a = GetList(JsonUtility.FromJson<response>(www.downloadHandler.text));
+            var a = GetList(JsonConvert.DeserializeObject<response>(www.downloadHandler.text));
             www.Dispose();
             return a;
         }
@@ -121,7 +121,7 @@ namespace Pixygon.NFT.Wax {
             if (!string.IsNullOrEmpty(collectionFilter))
                 url += "&collection_whitelist=" + collectionFilter;
             var www = await GetRequest(url, page, limit);
-            var r = JsonUtility.FromJson<response>(www.downloadHandler.text);
+            var r = JsonConvert.DeserializeObject<response>(www.downloadHandler.text);
             if (r.success == false || r.data.Length == 0) {
                 Debug.Log("Something wrong, i guess?");
                 //break;
@@ -174,7 +174,7 @@ namespace Pixygon.NFT.Wax {
             while (!isComplete) {
                 var www = await GetRequest(url, page, limit);
                 page++;
-                var r = JsonUtility.FromJson<response>(www.downloadHandler.text);
+                var r = JsonConvert.DeserializeObject<response>(www.downloadHandler.text);
                 if (r.success == false || r.data.Length == 0) {
                     isComplete = true;
                     break;
