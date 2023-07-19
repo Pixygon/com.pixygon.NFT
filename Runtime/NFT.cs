@@ -9,7 +9,7 @@ using UnityEngine.Networking;
 namespace Pixygon.NFT {
     public class NFT : MonoBehaviour {
         public delegate void OnFinish(NftTemplateObject[] assets);
-        public delegate void OnFinishCollection(collection collection);
+        public delegate void OnFinishCollection(collection[] collection);
         public delegate void OnSuccess();
         public delegate void OnSuccessString(string s);
         public delegate void OnFail();
@@ -161,6 +161,53 @@ namespace Pixygon.NFT {
             switch(chain) {
                 case Chain.Wax:
                     finish?.Invoke(await WaxNFT.GetCollection(collection));
+                    break;
+                case Chain.EOS:
+                    break;
+                case Chain.Ethereum:
+                    //finish?.Invoke(await EthNFT.GetCollection(collection));
+                    break;
+                case Chain.Tezos:
+                    //finish?.Invoke(await TezNFT.GetCollection(collection));
+                    break;
+                case Chain.Polygon:
+                    break;
+                case Chain.Polkadot:
+                    break;
+                case Chain.Elrond:
+                    break;
+                case Chain.BinanceChain:
+                    break;
+                case Chain.Cardano:
+                    break;
+                case Chain.Stellar:
+                    break;
+                case Chain.Neo:
+                    break;
+                case Chain.HyperledgerFabric:
+                    break;
+                case Chain.Waves:
+                    break;
+                case Chain.Cosmos:
+                    break;
+                case Chain.Ripple:
+                    break;
+                case Chain.Nem:
+                    break;
+                case Chain.Solana:
+                    break;
+                case Chain.Hive:
+                    break;
+                case Chain.Phantom:
+                    break;
+                case Chain.Flow:
+                    break;
+            }
+        }
+        public static async void SearchCollection(Chain chain, OnFinishCollection finish, string collection) {
+            switch(chain) {
+                case Chain.Wax:
+                    finish?.Invoke(await WaxNFT.SearchCollections(collection));
                     break;
                 case Chain.EOS:
                     break;
@@ -518,7 +565,7 @@ namespace Pixygon.NFT {
     [Serializable]
     public class collectionResponse {
         public bool success;
-        public collection data;
+        public collection[] data;
         public long query_time;
     }
     [Serializable]
