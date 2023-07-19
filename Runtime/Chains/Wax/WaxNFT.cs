@@ -149,7 +149,7 @@ namespace Pixygon.NFT.Wax {
             www.Dispose();
             return wax.ToArray();
         }
-        public static async Task<collection[]> GetCollection(string collectionFilter = "") {
+        public static async Task<collection> GetCollection(string collectionFilter = "") {
             var url = $"collections/{collectionFilter}";
             var www = await GetRequest(url, -1);
             Debug.Log("collection: " + www.downloadHandler.text);
@@ -162,7 +162,7 @@ namespace Pixygon.NFT.Wax {
             var url = $"collections?match={search}";
             var www = await GetRequest(url);
             Debug.Log("collection: " + www.downloadHandler.text);
-            var r = JsonConvert.DeserializeObject<collectionResponse>(www.downloadHandler.text);
+            var r = JsonConvert.DeserializeObject<collectionsResponse>(www.downloadHandler.text);
             www.Dispose();
             return  r.data;
         }

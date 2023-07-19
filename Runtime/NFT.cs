@@ -9,19 +9,20 @@ using UnityEngine.Networking;
 namespace Pixygon.NFT {
     public class NFT : MonoBehaviour {
         public delegate void OnFinish(NftTemplateObject[] assets);
-        public delegate void OnFinishCollection(collection[] collection);
+        public delegate void OnFinishCollection(collection collection);
+        public delegate void OnFinishCollections(collection[] collection);
         public delegate void OnSuccess();
         public delegate void OnSuccessString(string s);
         public delegate void OnFail();
         public delegate void OnBalanceGet(string s);
 
         private static string _account = string.Empty;
+        
+        //ASSETS
         public static async void FetchAllAssets(Chain chain, OnFinish finish, string collectionFilter = "", string wallet = "", int page = 1, int limit = 250) {
             switch(chain) {
                 case Chain.Wax:
                     finish?.Invoke(await WaxNFT.FetchAllAssets(collectionFilter, wallet, page, limit));
-                    break;
-                case Chain.EOS:
                     break;
                 case Chain.Ethereum:
                     finish?.Invoke(await EthNFT.FetchAllAssets(collectionFilter, wallet));
@@ -29,40 +30,31 @@ namespace Pixygon.NFT {
                 case Chain.Tezos:
                     finish?.Invoke(await TezNFT.FetchAllAssets(collectionFilter, wallet));
                     break;
-                case Chain.Polygon:
-                    break;
-                case Chain.Polkadot:
-                    break;
-                case Chain.Elrond:
-                    break;
-                case Chain.BinanceChain:
-                    break;
-                case Chain.Cardano:
-                    break;
-                case Chain.Stellar:
-                    break;
-                case Chain.Neo:
-                    break;
-                case Chain.HyperledgerFabric:
-                    break;
-                case Chain.Waves:
-                    break;
-                case Chain.Cosmos:
-                    break;
-                case Chain.Ripple:
-                    break;
-                case Chain.Nem:
-                    break;
-                case Chain.Solana:
-                    break;
-                case Chain.Hive:
-                    break;
-                case Chain.Phantom:
-                    break;
-                case Chain.Flow:
-                    break;
             }
         }
+        public static async void FetchAssets(NFTTemplateInfo info, OnFinish finish) {
+            switch(info.chain) {
+                case Chain.Wax:
+                finish?.Invoke(await WaxNFT.FetchAssets(info));
+                break;
+                case Chain.Ethereum:
+                finish?.Invoke(await EthNFT.FetchAssets(info));
+                break;
+                case Chain.Tezos:
+                finish?.Invoke(await TezNFT.FetchAssets(info));
+                break;
+            }
+        }
+        public static async Task<NftTemplateObject[]> FetchAssets(NFTTemplateInfo info) {
+            return info.chain switch {
+                Chain.Wax => await WaxNFT.FetchAssets(info),
+                Chain.Ethereum => await EthNFT.FetchAssets(info),
+                Chain.Tezos => await TezNFT.FetchAssets(info),
+                _ => null
+            };
+        }
+        
+        //TEMPLATES
         public static async void FetchAllTemplates(Chain chain, OnFinish finish, string collectionFilter = "", string wallet = "", int page = 1, int limit = 250) {
             switch(chain) {
                 case Chain.Wax:
@@ -157,6 +149,8 @@ namespace Pixygon.NFT {
                     break;
             }
         }
+        
+        //COLLECTIONS
         public static async void GetCollection(Chain chain, OnFinishCollection finish, string collection) {
             switch(chain) {
                 case Chain.Wax:
@@ -204,7 +198,7 @@ namespace Pixygon.NFT {
                     break;
             }
         }
-        public static async void SearchCollection(Chain chain, OnFinishCollection finish, string collection) {
+        public static async void SearchCollection(Chain chain, OnFinishCollections finish, string collection) {
             switch(chain) {
                 case Chain.Wax:
                     finish?.Invoke(await WaxNFT.SearchCollections(collection));
@@ -254,108 +248,6 @@ namespace Pixygon.NFT {
 
         
         
-        /// <summary>
-        /// Invokes 'finish' method and returns templates found
-        /// </summary>
-        /// <param name="info"></param>
-        /// <param name="finish"></param>
-        public static async void FetchAssets(NFTTemplateInfo info, OnFinish finish) {
-            switch(info.chain) {
-                case Chain.Wax:
-                finish?.Invoke(await WaxNFT.FetchAssets(info));
-                break;
-                case Chain.EOS:
-                finish?.Invoke(await OtherNFT.FetchAssets(info));
-                break;
-                case Chain.Ethereum:
-                finish?.Invoke(await EthNFT.FetchAssets(info));
-                break;
-                case Chain.Tezos:
-                finish?.Invoke(await TezNFT.FetchAssets(info));
-                break;
-                case Chain.Polygon:
-                finish?.Invoke(await OtherNFT.FetchAssets(info));
-                break;
-                case Chain.Polkadot:
-                break;
-                case Chain.Elrond:
-                break;
-                case Chain.BinanceChain:
-                break;
-                case Chain.Cardano:
-                break;
-                case Chain.Stellar:
-                break;
-                case Chain.Neo:
-                break;
-                case Chain.HyperledgerFabric:
-                break;
-                case Chain.Waves:
-                break;
-                case Chain.Cosmos:
-                break;
-                case Chain.Ripple:
-                break;
-                case Chain.Nem:
-                break;
-                case Chain.Solana:
-                finish?.Invoke(await OtherNFT.FetchAssets(info));
-                break;
-                case Chain.Flow:
-                finish?.Invoke(await OtherNFT.FetchAssets(info));
-                break;
-                case Chain.Hive:
-                    break;
-                case Chain.Phantom:
-                    break;
-            }
-        }
-        public static async Task<NftTemplateObject[]> FetchAssets(NFTTemplateInfo info) {
-            switch(info.chain) {
-                case Chain.Wax:
-                return await WaxNFT.FetchAssets(info);
-                case Chain.EOS:
-                break;
-                case Chain.Ethereum:
-                    return await EthNFT.FetchAssets(info);
-                break;
-                case Chain.Tezos:
-                    return await TezNFT.FetchAssets(info);
-                break;
-                case Chain.Polygon:
-                break;
-                case Chain.Polkadot:
-                break;
-                case Chain.Elrond:
-                break;
-                case Chain.BinanceChain:
-                break;
-                case Chain.Cardano:
-                break;
-                case Chain.Stellar:
-                break;
-                case Chain.Neo:
-                break;
-                case Chain.HyperledgerFabric:
-                break;
-                case Chain.Waves:
-                break;
-                case Chain.Cosmos:
-                break;
-                case Chain.Ripple:
-                break;
-                case Chain.Nem:
-                break;
-            }
-            return null;
-        }
-        /// <summary>
-        /// Returns true if the account owns the template, and invokes success or failed actions, if supplied
-        /// </summary>
-        /// <param name="info">The required template</param>
-        /// <param name="success">Action if successful</param>
-        /// <param name="failed">Action if failed</param>
-        /// <returns></returns>
         public static async Task<bool> ValidateTemplate(NFTTemplateInfo info, OnSuccess success = null, OnFail failed = null) {
             var owned = false;
             switch(info.chain) {
@@ -415,61 +307,17 @@ namespace Pixygon.NFT {
         }
 
         public static async Task<bool> ValidateTemplate(NFTTemplateInfo info, OnSuccessString success = null, OnFail failed = null, string verification = "") {
-            var owned = false;
-            switch(info.chain) {
-                case Chain.Wax:
-                    owned = await WaxNFT.ValidateTemplate(info);
-                    break;
-                case Chain.EOS:
-                    break;
-                case Chain.Ethereum:
-                    owned = await EthNFT.ValidateTemplate(info);
-                    break;
-                case Chain.Tezos:
-                    owned = await TezNFT.ValidateTemplate(info);
-                    break;
-                case Chain.Polygon:
-                    break;
-                case Chain.Polkadot:
-                    break;
-                case Chain.Elrond:
-                    break;
-                case Chain.BinanceChain:
-                    break;
-                case Chain.Cardano:
-                    break;
-                case Chain.Stellar:
-                    break;
-                case Chain.Neo:
-                    break;
-                case Chain.HyperledgerFabric:
-                    break;
-                case Chain.Waves:
-                    break;
-                case Chain.Cosmos:
-                    break;
-                case Chain.Ripple:
-                    break;
-                case Chain.Nem:
-                    break;
-                case Chain.Solana:
-                    break;
-                case Chain.Hive:
-                    break;
-                case Chain.Phantom:
-                    break;
-                case Chain.Flow:
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+            var owned = info.chain switch {
+                Chain.Wax => await WaxNFT.ValidateTemplate(info),
+                Chain.Ethereum => await EthNFT.ValidateTemplate(info),
+                Chain.Tezos => await TezNFT.ValidateTemplate(info),
+                _ => false
+            };
             if(owned)
                 success?.Invoke(verification);
             else
                 failed?.Invoke();
-
             return owned;
-
         }
 
         public static async Task<float> FetchCoinPrice(Chain chain) {
@@ -477,7 +325,7 @@ namespace Pixygon.NFT {
             //https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=ethereum
             //https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=tezos
             //https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=matic-network
-            string chainName = chain.ToString().ToLower();
+            var chainName = chain.ToString().ToLower();
             if (chain == Chain.Polygon)
                 chainName = "matic-network";
             var www = UnityWebRequest.Get($"https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids={chainName}");
@@ -564,6 +412,12 @@ namespace Pixygon.NFT {
     }
     [Serializable]
     public class collectionResponse {
+        public bool success;
+        public collection data;
+        public long query_time;
+    }
+    [Serializable]
+    public class collectionsResponse {
         public bool success;
         public collection[] data;
         public long query_time;
