@@ -15,6 +15,7 @@ namespace Pixygon.NFT {
     public class NftTemplateObject {
         public string Title;
         public string CollectionName;
+        public string CollectionId;
         public string Description;
         public string[] IpfsHashes;
         public NFTTemplateInfo TemplateInfo;
@@ -38,7 +39,8 @@ namespace Pixygon.NFT {
             IpfsHashes ??= GetIpfsHashes(a.immutable_data);
             if (string.IsNullOrEmpty(Description))
                 Description = GetDescription(a.immutable_data);
-            CollectionName = a.collection.collection_name;
+            CollectionName = a.collection.name;
+            CollectionId = a.collection.collection_name;
             Chain = Chain.Wax;
         }
 
