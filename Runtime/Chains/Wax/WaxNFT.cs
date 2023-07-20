@@ -118,6 +118,8 @@ namespace Pixygon.NFT.Wax {
         }
         public static async Task<NftTemplateObject[]> FetchAllAssets(string collectionFilter = "", string wallet = "", int page = 1, int limit = 250) {
             var url = $"assets?owner={(wallet == "" ? Account : wallet)}";
+            if (Account == string.Empty)
+                return null;
             if (!string.IsNullOrEmpty(collectionFilter))
                 url += "&collection_whitelist=" + collectionFilter;
             var www = await GetRequest(url, page, limit);
