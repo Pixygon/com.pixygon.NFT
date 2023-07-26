@@ -99,6 +99,24 @@ namespace Pixygon.NFT.Wax {
             }
             return wax.ToArray();
         }
+        public static async Task<int> GetTotalAssets(string wallet) {
+            var www = UnityWebRequest.Get($"https://wax.api.atomicassets.io/atomicassets/v1/accounts?owner={wallet}");
+            www.SetRequestHeader("Content-Type", "application/json");
+            www.SendWebRequest();
+            while (!www.isDone)
+                await Task.Yield();
+            if (www.error != null)
+            {
+                Debug.Log(www.error);
+                www.Dispose();
+                return 0;
+            }
+            var accountResult = JsonUtility.FromJson<AssetCount>(www.downloadHandler.text);
+            www.Dispose();
+            Debug.Log("Amount: " + accountResult.data[0].assets);
+            return accountResult.data[0].assets;
+        }
+
         /// <summary>
         /// Invokes 'finish' method and returns templates found
         /// </summary>

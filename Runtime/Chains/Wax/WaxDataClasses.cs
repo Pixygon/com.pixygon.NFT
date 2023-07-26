@@ -104,4 +104,18 @@ namespace Pixygon.NFT.Wax {
         public string name;
         public string type;
     }
+
+    [Serializable]
+    public class AssetCount
+    {
+        public bool success;
+        public AssetCountData[] data;
+    }
+
+    [Serializable]
+    public class AssetCountData
+    {
+        public string account;
+        public int assets;
+    }
 }

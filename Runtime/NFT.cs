@@ -53,6 +53,13 @@ namespace Pixygon.NFT {
                 _ => null
             };
         }
+
+        public static async Task<int> GetTotalAssets(Chain chain, string wallet) {
+            return chain switch {
+                Chain.Wax => await WaxNFT.GetTotalAssets(wallet),
+                _ => 0
+            };
+        }
         
         //TEMPLATES
         public static async void FetchAllTemplates(Chain chain, OnFinish finish, string collectionFilter = "", string wallet = "", int page = 1, int limit = 250) {
