@@ -19,10 +19,10 @@ namespace Pixygon.NFT {
         private static string _account = string.Empty;
         
         //ASSETS
-        public static async void FetchAllAssets(Chain chain, OnFinish finish, string collectionFilter = "", string wallet = "", int page = 1, int limit = 250) {
+        public static async void FetchAllAssets(Chain chain, OnFinish finish, string collectionFilter = "", string wallet = "", int page = 1, int limit = 250, bool descOrder = true, AssetSort assetSort = AssetSort.AssetId) {
             switch(chain) {
                 case Chain.Wax:
-                    finish?.Invoke(await WaxNFT.FetchAllAssets(collectionFilter, wallet, page, limit));
+                    finish?.Invoke(await WaxNFT.FetchAllAssets(collectionFilter, wallet, page, limit, descOrder, assetSort));
                     break;
                 case Chain.Ethereum:
                     finish?.Invoke(await EthNFT.FetchAllAssets(collectionFilter, wallet));
@@ -462,5 +462,21 @@ namespace Pixygon.NFT {
     [Serializable]
     public class rows {
         public string balance;
+    }
+
+
+    public enum AssetSort
+    {
+        AssetId,
+        Minted,
+        Updated,
+        Transferred,
+        TemplateMint,
+        Name
+    }
+    public enum CollectionSort
+    {
+        Created,
+        CollectionName,
     }
 }

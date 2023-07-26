@@ -134,8 +134,18 @@ namespace Pixygon.NFT.Wax {
             www.Dispose();
             return a;
         }
-        public static async Task<NftTemplateObject[]> FetchAllAssets(string collectionFilter = "", string wallet = "", int page = 1, int limit = 250) {
-            var url = $"assets?owner={(wallet == "" ? Account : wallet)}";
+        public static async Task<NftTemplateObject[]> FetchAllAssets(string collectionFilter = "", string wallet = "", int page = 1, int limit = 250, bool descOrder = false, AssetSort assetSort = AssetSort.AssetId) {
+            //https://wax.api.atomicassets.io/atomicassets/v1/assets?owner=pixygon&page=1&limit=100&order=desc&sort=asset_id
+            var order = descOrder ? "desc" : "asc";
+            var sort = assetSort switch {
+                AssetSort.AssetId => "asset_id",
+                AssetSort.Minted => "minted",
+                AssetSort.Updated => "updated",
+                AssetSort.Transferred => "transferred",
+                AssetSort.TemplateMint => "template_mint",
+                AssetSort.Name => "name"
+            };
+            var url = $"assets?owner={(wallet == "" ? Account : wallet)}&order={order}&sort={sort}";
             if (Account == string.Empty)
                 return null;
             if (!string.IsNullOrEmpty(collectionFilter))
