@@ -22,6 +22,7 @@ namespace Pixygon.NFT {
         public AssetData[] assets;
         public NFTType MediaType;
         public Chain Chain;
+        public Dictionary<string, object> Data;
         
         public string DisplayInfo() {
             var nftDataText = new StringBuilder();
@@ -42,6 +43,8 @@ namespace Pixygon.NFT {
             CollectionName = a.collection.name;
             CollectionId = a.collection.collection_name;
             Chain = Chain.Wax;
+            Data = a.immutable_data;
+            Data.Concat(a.mutable_data).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
         }
 
         private static string GetDescription(Dictionary<string, object> data) {
