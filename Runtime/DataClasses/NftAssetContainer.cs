@@ -46,7 +46,6 @@ namespace Pixygon.NFT {
             Data = a.immutable_data;
             Data.Concat(a.mutable_data).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
         }
-
         private static string GetDescription(Dictionary<string, object> data) {
             if (data == null) return "";
             foreach (var pair in data.Where(pair => pair.Key.ToLower() == "description" || pair.Key.ToLower() == "desc" || pair.Key.ToLower() == "info"))
