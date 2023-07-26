@@ -2,46 +2,6 @@
 using System.Collections.Generic;
 
 namespace Pixygon.NFT.Wax {
-    
-    /// <summary>
-    /// This is a template, and the number of assets associated with it
-    /// </summary>
-    /*
-    [Serializable]
-    public class waxAsset {
-        public string name;
-        public string collectionName;
-        public string ipfs;
-        public string description;
-        public string video;
-        //public string chain;
-        //public int templateID;
-        //public string schemaID;
-        public NFTTemplateInfo templateInfo;
-        public AssetData[] assets;
-        
-        public string DisplayInfo() {
-            var nftDataText = new StringBuilder();
-            //nftDataText.Append("Type: ");
-            //nftDataText.Append(type);
-            //nftDataText.Append("\nAction: ");
-            //nftDataText.Append(nftAction);
-            nftDataText.Append("\nTemplateID: ");
-            nftDataText.Append(templateInfo.template);
-            return nftDataText.ToString();
-        }
-
-        public NFTTemplateInfo TemplateInfo() {
-            NFTTemplateInfo info = new NFTTemplateInfo();
-            info.chain = chain;
-            info.collection = collectionName;
-            info.schema = schemaID;
-            info.template = templateID;
-            return info;
-        }
-        public NFTType type;
-    }
-    */
     [Serializable]
     public class waxAssetData {
         public string contract;
@@ -55,8 +15,8 @@ namespace Pixygon.NFT.Wax {
         public schema schema;
         public template template;
         //public backed_tokens[] backed_tokens;
-        public Dictionary<string, string> mutable_data;
-        public Dictionary<string, string> immutable_data;
+        public Dictionary<string, object> mutable_data;
+        public Dictionary<string, object> immutable_data;
         public int template_mint;
 
         public string burned_by_account;
@@ -124,8 +84,8 @@ namespace Pixygon.NFT.Wax {
         public bool is_transferable;
         public bool is_burnable;
         public int issued_supply;
-        public Dictionary<string, string> mutable_data;
-        public Dictionary<string, string> immutable_data;
+        public Dictionary<string, object> mutable_data;
+        public Dictionary<string, object> immutable_data;
         public string created_at_time;
         public string created_at_block;
     }

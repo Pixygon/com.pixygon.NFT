@@ -44,14 +44,14 @@ namespace Pixygon.NFT {
             Chain = Chain.Wax;
         }
 
-        private static string GetDescription(Dictionary<string, string> data) {
+        private static string GetDescription(Dictionary<string, object> data) {
             if (data == null) return "";
             foreach (var pair in data.Where(pair => pair.Key.ToLower() == "description" || pair.Key.ToLower() == "desc" || pair.Key.ToLower() == "info"))
-                return pair.Value;
+                return pair.Value.ToString();
             return "";
         }
-        private static string[] GetIpfsHashes(Dictionary<string, string> data) {
-            return data == null ? null : (from pair in data where pair.Key.ToLower() == "video" || pair.Key.ToLower() == "image" || pair.Key.ToLower() == "img" select pair.Value).ToArray();
+        private static string[] GetIpfsHashes(Dictionary<string, object> data) {
+            return data == null ? null : (from pair in data where pair.Key.ToLower() == "video" || pair.Key.ToLower() == "image" || pair.Key.ToLower() == "img" select pair.Value.ToString()).ToArray();
         }
     }
 }
