@@ -43,8 +43,7 @@ namespace Pixygon.NFT {
             CollectionName = a.collection.name;
             CollectionId = a.collection.collection_name;
             Chain = Chain.Wax;
-            Data = a.immutable_data;
-            if (Data == null) return;
+            Data = a.immutable_data ?? new Dictionary<string, object>();
             if (a.mutable_data == null) return;
             Data.Concat(a.mutable_data).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
         }
