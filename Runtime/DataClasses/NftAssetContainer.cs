@@ -44,6 +44,8 @@ namespace Pixygon.NFT {
             CollectionId = a.collection.collection_name;
             Chain = Chain.Wax;
             Data = a.immutable_data;
+            if (Data == null) return;
+            if (a.mutable_data == null) return;
             Data.Concat(a.mutable_data).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
         }
         private static string GetDescription(Dictionary<string, object> data) {
