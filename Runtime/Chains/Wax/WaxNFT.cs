@@ -101,6 +101,7 @@ namespace Pixygon.NFT.Wax {
             return wax.ToArray();
         }
         public static async Task<int> GetTotalAssets(string wallet) {
+            if (string.IsNullOrWhiteSpace(wallet)) return 0;
             var www = UnityWebRequest.Get($"https://wax.api.atomicassets.io/atomicassets/v1/accounts?owner={wallet}");
             www.SetRequestHeader("Content-Type", "application/json");
             www.SendWebRequest();
@@ -147,8 +148,8 @@ namespace Pixygon.NFT.Wax {
                 AssetSort.Name => "name"
             };
             var url = $"assets?owner={(wallet == "" ? Account : wallet)}&order={order}&sort={sort}";
-            if (Account == string.Empty)
-                return null;
+            if (Account == string.Empty) return null;
+            if (string.IsNullOrWhiteSpace(wallet) && string.IsNullOrWhiteSpace(Account)) return null;
             if (!string.IsNullOrEmpty(collectionFilter))
                 url += "&collection_whitelist=" + collectionFilter;
             var www = await GetRequest(url, page, limit);
