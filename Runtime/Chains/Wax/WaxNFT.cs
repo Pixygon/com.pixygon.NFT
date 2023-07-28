@@ -18,9 +18,10 @@ namespace Pixygon.NFT.Wax {
 
         private static string Account {
             get {
-                if (string.IsNullOrWhiteSpace(account) && !string.IsNullOrWhiteSpace(SaveManager.SettingsSave._user.waxWallet))
-                    account = SaveManager.SettingsSave._user.waxWallet;
-                return account;
+                //if (string.IsNullOrWhiteSpace(account) && !string.IsNullOrWhiteSpace(SaveManager.SettingsSave._user.waxWallet))
+                //    account = SaveManager.SettingsSave._user.waxWallet;
+                //return account;
+                return SaveManager.SettingsSave._user.waxWallet;
             }
         }
         private static async Task CheckNodes() {
@@ -189,7 +190,7 @@ namespace Pixygon.NFT.Wax {
 
         public static async Task<collection[]> SearchCollections(string search) {
             var url = $"collections?match={search}";
-            var www = await GetRequest(url);
+            var www = await GetRequest(url, 1, 25);
             var r = JsonConvert.DeserializeObject<collectionsResponse>(www.downloadHandler.text);
             www.Dispose();
             return  r.data;
