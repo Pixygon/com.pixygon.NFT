@@ -188,10 +188,10 @@ namespace Pixygon.NFT.Wax {
             www.Dispose();
             return  r.data;
         }
-        public static async Task<collection> GetCollections(string[] collectionsFilter) {
+        public static async Task<collection[]> GetCollections(string[] collectionsFilter) {
             var url = $"collections?collection_name={collectionsFilter.Aggregate("", (current, s) => current + (s + ","))}";
             var www = await GetRequest(url, -1);
-            var r = JsonConvert.DeserializeObject<collectionResponse>(www.downloadHandler.text);
+            var r = JsonConvert.DeserializeObject<collectionsResponse>(www.downloadHandler.text);
             www.Dispose();
             return  r.data;
         }
