@@ -205,6 +205,13 @@ namespace Pixygon.NFT {
                     break;
             }
         }
+        public static async void GetCollections(Chain chain, OnFinishCollection finish, string[] collection) {
+            switch(chain) {
+                case Chain.Wax:
+                    finish?.Invoke(await WaxNFT.GetCollections(collection));
+                    break;
+            }
+        }
         public static async void SearchCollection(Chain chain, OnFinishCollections finish, string collection) {
             switch(chain) {
                 case Chain.Wax:
